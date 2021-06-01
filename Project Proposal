@@ -1,0 +1,36 @@
+## Project Proposal
+
+### Overview
+
+A app that takes in user parameters about how the user is feeling on a day and produces a related song. 
+
+### Technologies required (besides typical Hackbright tech stack)
+
+- The Spotify API: https://developer.spotify.com/documentation/web-api/quick-start/
+- Spotipy: https://spotipy.readthedocs.io/en/2.18.0/#installation
+- 
+
+### Data
+
+- User email, password, linked Spotify account
+- Saved journal entry, mood rating, with resulting song link/embed. 
+  -Date
+- 
+
+
+### Roadmap
+
+#### MVP
+
+- User login
+- User can create, edit, delete journal/ranking entries
+- User can create, edit, delete journal + song match
+- Associate song from Spotify with journal entry https://spotipy.readthedocs.io/en/2.18.0/
+
+#### 2.0
+
+- Fine-tune algo: search spotify based on user's journal/ranking entry for that day filtered through their recently played artists
+- 
+
+#### 3.0
+- Can set default genre preference
