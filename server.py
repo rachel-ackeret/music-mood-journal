@@ -17,8 +17,6 @@ SPOTIPY_REDIRECT_URI='http://localhost:5000/'
 #base URL
 url = 'https://api.spotify.com/v1/'
 
-#API Key for Spotify
-# payload = {'apikey': '8582183d20d94a61b868892d3d0d5ac4'}
 # res = requests.get(url, params=payload)
 
 auth_manager = SpotifyClientCredentials()
