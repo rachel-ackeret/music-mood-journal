@@ -7,7 +7,7 @@ import spotipy
 #from spotipy.oauth2 import SpotifyClientCredentials
 from flask_login import LoginManager, login_user, login_required
 from flask_sqlalchemy import SQLAlchemy
-from model import connect_to_db, User
+from model import connect_to_db, User, Entry
 
 db = SQLAlchemy()
 
@@ -20,7 +20,6 @@ app.secret_key = 'SECRETSECRETSECRET'
 # SPOTIPY_REDIRECT_URI='http://localhost:5000/'
 # auth_manager = SpotifyClientCredentials()
 # sp = spotipy.Spotify(auth_manager=auth_manager)
-
 
 #base URL
 url = 'https://api.spotify.com/v1/'
@@ -36,46 +35,69 @@ def homepage():
 def login():
     username = request.form.get("username")
     password = request.form.get("password")
+    print(username)
+    print(password)
 
-    user = User.query.filter_by(username=username).first()
-
-    if user.password == password:
-	    # Call flask_login.login_user to login a user
-        login_user(user)
-
-        flash("Logged in successfully!")
-
-        return redirect("/journal")
-
+    if User.query.filter_by(username=username).first():
+        user = User.query.filter_by(username=username).first()
+        if user.password == password:
+            # Call flask_login.login_user to login a user
+            login_user(user)
+            current_user_id = User.query.filter_by(username=username).first().id
+            print(current_user_id)
+            flash("Logged in successfully!")
+            return redirect("/journal")
+    print("sorry try again")
     flash("Sorry try again.")
     return redirect("/")
 
 @app.route("/register", methods=["POST"])
 def register():
-    username = request.form.get("username")
-    password = request.form.get("password")
-    fname = request.form.get("fname")
-    lname = request.form.get("lname")
-
-    if User.query.filter_by(username=username) == None:
-        db.session.execute(sql, {'username' : username, 
-                                'password': password, 
-                                'fname': fname, 
-                                'lname': lname})
-    #db.model
-    #sqlalchemy 1
+    username = request.form.get('username')
+    password = request.form.get('password')
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    user = User(username=username, password=password, fname = fname, lname = lname)
+    
+    if not User.query.filter_by(username=username).first():
+        db.session.add(user)
         db.session.commit()
         flash("Created User Successfully!")
-        return redirect("/journal")
+        print("Created User Successfully!")
+        return redirect("/")
 
     flash("User already Created.")
+    print("User already Created.")
     return redirect("/")
 
 
 @app.route("/journal")
 @login_required
 def dashboard():
-    return render_template("journal.html")
+    print(db.session)
+    return render_template('journal.html')
+
+@app.route("/journal-saved", methods=["POST"])
+@login_required
+def save_journal():
+    body = request.form.get('journal_entry')
+    created_at = request.form.get('created_at')
+    spotify_song_id = request.form.get('spotify_song')
+    user_id = current_user_id
+    energy_ranking = request.form.get('energy')
+    mood_ranking = request.form.get('mood')
+
+    entry = Entry(body=body, 
+                created_at=created_at, 
+                spotify_song_id=spotify_song_id, 
+                user_id=user_id, 
+                energy_ranking=energy_ranking, 
+                mood_ranking = mood_ranking)
+    db.session.add(entry)
+    db.session.commit()
+    flash("Created Entry Successfully!")
+    print("Created Entry Successfully!")
+    return redirect("/journal")
 
 #Flask Login Manager
 @login_manager.user_loader

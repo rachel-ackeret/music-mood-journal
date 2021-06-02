@@ -4,7 +4,25 @@
 
   <div><h1>This is your journal</h1></div>
   {% if current_user.is_authenticated %}
-    <p>Welcome, {{ current_user.first_name }}</p>
-    {% endif %}
+    <p>Welcome!</p>
+    <div class="card">
+        <h2>Create Your Journal Entry Today</h2>
+        <form action ="/journal-saved" method="POST">
+            <textarea name = "journal_entry" rows="15">
+            How are you feeling today?
+            </textarea>    
+            <p>Rank your energy today from Low to High</p>
+            <input type="range" name="energy" min="1" max="10" value="5">
+            <p>Rank your happiness today from Low to High</p>
+            <input type="range" name="happiness" min="1" max="10" value="5">
+            <input id="today" name="created_at" type="date">
+            <input type="text" name="spotify_song" required size="15">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
 
+    <script>
+        document.querySelector("#today").valueAsDate = new Date();
+    </script>
+  {% endif %}
 {% endblock %}
