@@ -25,12 +25,13 @@ app.secret_key = 'SECRETSECRETSECRET'
 #base URL
 url = 'https://api.spotify.com/v1/'
 
-# TEST HOMEPAGE for AUTH
+# HOMEPAGE for LOGIN & REGISTRATION
 @app.route('/')
 def homepage():
     """Show homepage."""
     return render_template('homepage.html')
 
+#LOGIN ROUTE
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form.get("username")
@@ -61,7 +62,8 @@ def register():
                                 'password': password, 
                                 'fname': fname, 
                                 'lname': lname})
-    
+    #db.model
+    #sqlalchemy 1
         db.session.commit()
         flash("Created User Successfully!")
         return redirect("/journal")
@@ -69,11 +71,13 @@ def register():
     flash("User already Created.")
     return redirect("/")
 
+
 @app.route("/journal")
 @login_required
 def dashboard():
     return render_template("journal.html")
 
+#Flask Login Manager
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
@@ -81,6 +85,6 @@ def load_user(user_id):
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='0.0.0.0')
     connect_to_db(app)
     login_manager.init_app(app)
+    app.run(host='0.0.0.0')
