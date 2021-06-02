@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+  <div><h1>This is your journal</h1></div>
+  {% if current_user.is_authenticated %}
+    <p>Welcome, {{ current_user.first_name }}</p>
+    {% endif %}
+
+{% endblock %}
