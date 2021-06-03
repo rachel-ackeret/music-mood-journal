@@ -4,7 +4,7 @@
 
   <div><h1>This is your journal</h1></div>
   {% if current_user.is_authenticated %}
-    <p>Welcome {logged_in_user}!</p>
+    <p>Welcome {{the_user_name.fname}}!</p>
     <div class="card">
         <h2>Create Your Journal Entry Today</h2>
         <form action ="/journal-saved" method="POST">
@@ -14,7 +14,7 @@
             <input type="range" name="energy" min="1" max="10" value="5">
             <p>Rank your happiness today from Low to High</p>
             <input type="range" name="happiness" min="1" max="10" value="5">
-            <input id="today" name="created_at" type="date">
+            <input id="today" name="created_at" type="date" style="display:none;">
             <input type="text" name="spotify_song" required size="15">
             <input type="submit" value="Submit">
         </form>
@@ -22,9 +22,12 @@
     <div class="grid">
       {% for entry in journal_entries %}
         <div class="card">
-          <h3>{{entry.created_at}} Entry</h3>
+          <h3>Entry on {{entry.created_at}}</h3>
           <p>{{entry.body}}</p>
+          <!--<iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXdxcBWuJkbcy" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>-->
           <p>{{entry.spotify_song_id}}</p>
+          <p>Mood: {{entry.mood_ranking}}</p>
+          <p>Energy: {{entry.energy_ranking}}</p>
         </div>
       {% endfor %}
 

@@ -76,9 +76,11 @@ def register():
 @login_required
 def dashboard():
     logged_in_user = session['current_user']
+    #Get user's first name
+    the_user_name = User.query.filter_by(id=logged_in_user).first()
     #pass in journal entries
-    journal_entries = Entry.query.filter_by(user_id=logged_in_user).all()
-    return render_template('journal.html', logged_in_user = logged_in_user, journal_entries = journal_entries)
+    journal_entries = Entry.query.filter_by(user_id=logged_in_user).order_by(Entry.created_at.desc()).all()
+    return render_template('journal.html', journal_entries = journal_entries, the_user_name=the_user_name)
 
 @app.route("/journal-saved", methods=["POST"])
 @login_required
