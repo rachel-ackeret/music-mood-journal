@@ -10,6 +10,11 @@
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.css"/>
     </head>
     <body>
+        <ul>
+            {% for message in get_flashed_messages() %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
     {% block body %}
     BODY OF PAGE GOES HERE VIA INHERITANCE
     {% endblock %}

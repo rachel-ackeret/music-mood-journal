@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect
+from flask import Flask, render_template, request, flash, redirect, session
 
 from pprint import pformat
 import os
@@ -45,6 +45,7 @@ def login():
             login_user(user)
             current_user_id = User.query.filter_by(username=username).first().id
             print(current_user_id)
+            session['current_user'] = current_user_id
             flash("Logged in successfully!")
             return redirect("/journal")
     print("sorry try again")
@@ -74,8 +75,10 @@ def register():
 @app.route("/journal")
 @login_required
 def dashboard():
-    print(db.session)
-    return render_template('journal.html')
+    logged_in_user = session['current_user']
+    #pass in journal entries
+    journal_entries = Entry.query.filter_by(user_id=logged_in_user).all()
+    return render_template('journal.html', logged_in_user = logged_in_user, journal_entries = journal_entries)
 
 @app.route("/journal-saved", methods=["POST"])
 @login_required
@@ -83,9 +86,9 @@ def save_journal():
     body = request.form.get('journal_entry')
     created_at = request.form.get('created_at')
     spotify_song_id = request.form.get('spotify_song')
-    user_id = current_user_id
+    user_id = session['current_user']
     energy_ranking = request.form.get('energy')
-    mood_ranking = request.form.get('mood')
+    mood_ranking = request.form.get('happiness')
 
     entry = Entry(body=body, 
                 created_at=created_at, 

@@ -4,13 +4,12 @@
 
   <div><h1>This is your journal</h1></div>
   {% if current_user.is_authenticated %}
-    <p>Welcome!</p>
+    <p>Welcome {logged_in_user}!</p>
     <div class="card">
         <h2>Create Your Journal Entry Today</h2>
         <form action ="/journal-saved" method="POST">
-            <textarea name = "journal_entry" rows="15">
-            How are you feeling today?
-            </textarea>    
+            <p>How are you feeling today?</p>
+            <textarea name = "journal_entry" rows="15"></textarea>    
             <p>Rank your energy today from Low to High</p>
             <input type="range" name="energy" min="1" max="10" value="5">
             <p>Rank your happiness today from Low to High</p>
@@ -20,7 +19,16 @@
             <input type="submit" value="Submit">
         </form>
     </div>
+    <div class="grid">
+      {% for entry in journal_entries %}
+        <div class="card">
+          <h3>{{entry.created_at}} Entry</h3>
+          <p>{{entry.body}}</p>
+          <p>{{entry.spotify_song_id}}</p>
+        </div>
+      {% endfor %}
 
+    </div>
     <script>
         document.querySelector("#today").valueAsDate = new Date();
     </script>
