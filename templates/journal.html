@@ -22,7 +22,7 @@
     <div class="grid">
       {% for entry in journal_entries %}
         <div class="card">
-          <h3>Entry on {{entry.created_at}}</h3>
+          <h3>Entry on {{entry.created_at.month}}/{{entry.created_at.day}}/{{entry.created_at.year}}</h3>
           <p>{{entry.body}}</p>
           <!--<iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXdxcBWuJkbcy" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>-->
           <p>{{entry.spotify_song_id}}</p>

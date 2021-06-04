@@ -4,10 +4,12 @@ from pprint import pformat
 import os
 import requests
 import spotipy
-#from spotipy.oauth2 import SpotifyClientCredentials
+from random import choice
+from spotipy.oauth2 import SpotifyClientCredentials
 from flask_login import LoginManager, login_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from model import connect_to_db, User, Entry
+
 
 db = SQLAlchemy()
 
@@ -17,9 +19,10 @@ app = Flask(__name__)
 app.secret_key = 'SECRETSECRETSECRET'
 
 #Spotipy credentials
-# SPOTIPY_REDIRECT_URI='http://localhost:5000/'
-# auth_manager = SpotifyClientCredentials()
-# sp = spotipy.Spotify(auth_manager=auth_manager)
+SPOTIPY_REDIRECT_URI='http://localhost:5000/'
+auth_manager = SpotifyClientCredentials()
+spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+
 
 #base URL
 url = 'https://api.spotify.com/v1/'
@@ -85,6 +88,7 @@ def dashboard():
 @app.route("/journal-saved", methods=["POST"])
 @login_required
 def save_journal():
+    #get data from journal form
     body = request.form.get('journal_entry')
     created_at = request.form.get('created_at')
     spotify_song_id = request.form.get('spotify_song')
@@ -92,6 +96,7 @@ def save_journal():
     energy_ranking = request.form.get('energy')
     mood_ranking = request.form.get('happiness')
 
+    #create database entry with object Entry
     entry = Entry(body=body, 
                 created_at=created_at, 
                 spotify_song_id=spotify_song_id, 
@@ -103,6 +108,28 @@ def save_journal():
     flash("Created Entry Successfully!")
     print("Created Entry Successfully!")
     return redirect("/journal")
+
+
+#TEST DATA 
+
+@app.route("/test-data")
+def test_data():
+
+    #Generate the song recommendation using Spotify's recommendation request, using given parameters
+    #Basic function, may add more specifc user seeds in V2 
+    #This works, now branch off and do more testing with inputs
+
+    def show_recommendations():
+        results = spotify.recommendations(seed_artists=['4NHQUGzhtTLFvgF5SZesLK'],max_danceability=.5)
+        song_bin = []
+        for track in results['tracks']:
+            song_bin.append(track['external_urls']['spotify'])
+        return song_bin
+    result_a = choice(show_recommendations())
+    result = result_a.strip("https://open.spotify.com/track/")
+    print(result)
+    return render_template('test-spotify.html', result = result)
+
 
 #Flask Login Manager
 @login_manager.user_loader
