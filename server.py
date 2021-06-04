@@ -115,20 +115,122 @@ def save_journal():
 @app.route("/test-data")
 def test_data():
 
-    #Generate the song recommendation using Spotify's recommendation request, using given parameters
-    #Basic function, may add more specifc user seeds in V2 
-    #This works, now branch off and do more testing with inputs
+    #Test some fields user eventually will input
+    #using the largest playlist on spotify as a seed: https://open.spotify.com/playlist/5S8SJdl1BDc0ugpkEvFsIL?si=6741d4a2a6bd4756
 
-    def show_recommendations():
-        results = spotify.recommendations(seed_artists=['4NHQUGzhtTLFvgF5SZesLK'],max_danceability=.5)
-        song_bin = []
+    energy_input = 8
+    mood_input = 3
+    
+    def high_energy_high_mood(e, m):
+        #based on energy ranking
+        target_danceabiliity = (e * .1)
+        target_energy = (e * .1)
+        #based on mood ranking
+        mode = 1
+        #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
+        target_tempo = m * 16.5
+        results = spotify.recommendations(seed_genres=['pop'], 
+                                        target_danceabiliity=target_danceabiliity, 
+                                        target_energy=target_energy, 
+                                        mode=mode, 
+                                        target_tempo=target_tempo)
+
+        song_bin = []                                        
         for track in results['tracks']:
             song_bin.append(track['external_urls']['spotify'])
-        return song_bin
-    result_a = choice(show_recommendations())
-    result = result_a.strip("https://open.spotify.com/track/")
-    print(result)
-    return render_template('test-spotify.html', result = result)
+
+        result_c = choice(song_bin)
+        resulting_song_id = result_c.strip("https://open.spotify.com/track/")
+
+        return resulting_song_id
+
+    def low_energy_high_mood(e, m):
+        #based on ENERGY ranking
+        target_energy = e * .1
+        target_loudness = e * .1
+        #based on MOOD ranking
+        mode = 1
+        #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
+        target_tempo = m * 16.5
+        results = spotify.recommendations(seed_genres=['pop'], 
+                                        target_energy=target_energy, 
+                                        target_loudness=target_loudness, 
+                                        mode=mode, 
+                                        target_tempo=target_tempo)
+
+        song_bin = []                                        
+        for track in results['tracks']:
+            song_bin.append(track['external_urls']['spotify'])
+
+        result_c = choice(song_bin)
+        resulting_song_id = result_c.strip("https://open.spotify.com/track/")
+
+        return resulting_song_id
+
+    def low_energy_low_mood(e, m):
+        #based on ENERGY ranking
+        target_energy = e * .1
+        target_loudness = e * .1
+        #based on MOOD ranking
+        target_acousticness = (m * .1) + .5 
+        #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
+        target_tempo = m * 16.5
+        results = spotify.recommendations(seed_genres=['pop'], 
+                                        target_energy=target_energy, 
+                                        target_loudness=target_loudness, 
+                                        target_acousticness=target_acousticness, 
+                                        target_tempo=target_tempo)
+
+        song_bin = []                                        
+        for track in results['tracks']:
+            song_bin.append(track['external_urls']['spotify'])
+
+        result_c = choice(song_bin)
+        resulting_song_id = result_c.strip("https://open.spotify.com/track/")
+
+        return resulting_song_id
+
+    def high_energy_low_mood(e, m):
+        #based on ENERGY ranking
+        target_danceabiliity = (e * .1)
+        target_energy = (e * .1)
+        #based on MOOD ranking
+        target_acousticness = (m * .1) + .5 
+        #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
+        target_tempo = m * 16.5
+        results = spotify.recommendations(seed_genres=['pop'], 
+                                        target_energy=target_energy, 
+                                        target_danceabiliity=target_danceabiliity, 
+                                        target_acousticness=target_acousticness, 
+                                        target_tempo=target_tempo)
+
+        song_bin = []                                        
+        for track in results['tracks']:
+            song_bin.append(track['external_urls']['spotify'])
+
+        result_c = choice(song_bin)
+        resulting_song_id = result_c.strip("https://open.spotify.com/track/")
+
+        return resulting_song_id
+
+    #choose which function to run based on inputs
+    def get_recipe(energy, mood):
+        if (energy > 5) and (mood > 5):
+            return high_energy_high_mood(energy, mood)
+        elif (energy < 5) and (mood > 5):
+            return low_energy_high_mood(energy,mood)
+        elif (energy < 5) and (mood < 5):
+            return low_energy_low_mood(energy,mood)
+        elif (energy > 5) and (mood < 5):
+            return high_energy_low_mood(energy,mood)
+        else:
+            print('Oops, nothing happened')
+
+
+    the_final_result = get_recipe(energy_input, mood_input)
+
+
+    return render_template('test-spotify.html', the_final_result=the_final_result)
 
 
 #Flask Login Manager
