@@ -15,7 +15,6 @@
             <p>Rank your happiness today from Low to High</p>
             <input type="range" name="happiness" min="1" max="10" value="5">
             <input id="today" name="created_at" type="date" style="display:none;">
-            <input type="text" name="spotify_song" required size="15">
             <input type="submit" value="Submit">
         </form>
     </div>
@@ -24,8 +23,9 @@
         <div class="card">
           <h3>Entry on {{entry.created_at.month}}/{{entry.created_at.day}}/{{entry.created_at.year}}</h3>
           <p>{{entry.body}}</p>
-          <!--<iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXdxcBWuJkbcy" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>-->
-          <p>{{entry.spotify_song_id}}</p>
+          <iframe src="https://open.spotify.com/embed/track/{{entry.spotify_song_id}}" width="300" 
+          height="80" frameborder="0" allowtransparency="true" allow="encrypted-media">
+          </iframe>
           <p>Mood: {{entry.mood_ranking}}</p>
           <p>Energy: {{entry.energy_ranking}}</p>
         </div>
