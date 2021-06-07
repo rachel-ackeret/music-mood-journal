@@ -6,109 +6,123 @@ import requests
 import spotipy
 from random import choice
 from spotipy.oauth2 import SpotifyClientCredentials
-from flask_login import LoginManager, login_user, login_required
-from flask_sqlalchemy import SQLAlchemy
-from model import connect_to_db, User, Entry
+from flask_login import LoginManager, login_user, login_required, current_user
+
+from model import connect_to_db, User, Entry, db
 import crud
 
-
-db = SQLAlchemy()
-
-login_manager = LoginManager()
-#Flask credentials
+# Flask setup
 app = Flask(__name__)
-app.secret_key = 'SECRETSECRETSECRET'
+app.secret_key = "SECRETSECRETSECRET"
+
+# Flask login setup
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 #Spotipy credentials
-SPOTIPY_REDIRECT_URI='http://localhost:5000/'
+SPOTIPY_REDIRECT_URI="http://localhost:5000/"
 auth_manager = SpotifyClientCredentials()
 spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 
-
 #base URL
-url = 'https://api.spotify.com/v1/'
+url = "https://api.spotify.com/v1/"
+
 
 # HOMEPAGE for LOGIN & REGISTRATION
-@app.route('/')
+@app.route("/")
 def homepage():
     """Show homepage."""
-    return render_template('homepage.html')
+    
+    if current_user.is_authenticated:
+        return redirect("/journal")
+
+    return render_template("homepage.html")
+
 
 #LOGIN ROUTE
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form.get("username")
     password = request.form.get("password")
+    
+    # For debugging
     print(username)
     print(password)
 
-    if User.query.filter_by(username=username).first():
-        user = User.query.filter_by(username=username).first()
-        if user.password == password:
-            # Call flask_login.login_user to login a user
-            login_user(user)
-            current_user_id = User.query.filter_by(username=username).first().id
-            print(current_user_id)
-            session['current_user'] = current_user_id
-            flash("Logged in successfully!")
-            return redirect("/journal")
+    user = User.query.filter_by(username=username).first()
+    if user and user.password == password:
+        # Call flask_login.login_user to login a user
+        login_user(user)
+
+        flash("Logged in successfully!")
+        return redirect("/journal")
+
     print("sorry try again")
     flash("Sorry try again.")
     return redirect("/")
 
+
 @app.route("/register", methods=["POST"])
 def register():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    fname = request.form.get('fname')
-    lname = request.form.get('lname')
-    user = User(username=username, password=password, fname = fname, lname = lname)
-    
+    username = request.form.get("username")
+    password = request.form.get("password")
+    fname = request.form.get("fname")
+    lname = request.form.get("lname")
+
     if not User.query.filter_by(username=username).first():
+        user = User(
+            username=username,
+            password=password,
+            fname = fname,
+            lname = lname,
+        )
+
         db.session.add(user)
         db.session.commit()
+
         flash("Created User Successfully!")
-        print("Created User Successfully!")
+
         return redirect("/")
 
     flash("User already Created.")
-    print("User already Created.")
+
     return redirect("/")
 
 
 @app.route("/journal")
 @login_required
 def dashboard():
-    logged_in_user = session['current_user']
-    #Get user's first name
-    the_user_name = User.query.filter_by(id=logged_in_user).first()
-    #pass in journal entries
-    journal_entries = Entry.query.filter_by(user_id=logged_in_user).order_by(Entry.created_at.desc()).all()
-    return render_template('journal.html', journal_entries = journal_entries, the_user_name=the_user_name)
+    return render_template("journal.html")
+
 
 @app.route("/journal-saved", methods=["POST"])
 @login_required
 def save_journal():
     #get data from journal form
-    body = request.form.get('journal_entry')
-    created_at = request.form.get('created_at')
-    user_id = session['current_user']
-    energy_ranking = int(request.form.get('energy'))
-    mood_ranking = int(request.form.get('happiness'))
+    body = request.form.get("journal_entry")
+    # user_id = session["current_user"]
+    energy_ranking = int(request.form.get("energy"))
+    mood_ranking = int(request.form.get("happiness"))
     spotify_song_id = crud.get_recipe(energy_ranking, mood_ranking)
-
 
     #create database entry with object Entry
     entry = Entry(body=body, 
-                created_at=created_at, 
+                # user_id=user_id,
                 spotify_song_id=spotify_song_id, 
-                user_id=user_id, 
                 energy_ranking=energy_ranking, 
                 mood_ranking = mood_ranking)
+    current_user.entries.append(entry)
+
     db.session.add(entry)
     db.session.commit()
+
     flash("Created Entry Successfully!")
     print("Created Entry Successfully!")
+
     return redirect("/journal")
 
 
@@ -116,17 +130,12 @@ def save_journal():
 
 @app.route("/test-data")
 def test_data():
-    return render_template('test-spotify.html')
+    return render_template("test-spotify.html")
 
 
-#Flask Login Manager
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.debug = True
     connect_to_db(app)
-    login_manager.init_app(app)
-    app.run(host='0.0.0.0')
+
+    app.run(host="0.0.0.0")
+    # app.run(use_reloader=True, use_debugger=True)

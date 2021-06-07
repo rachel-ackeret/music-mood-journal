@@ -15,7 +15,8 @@ def high_energy_high_mood(e, m):
                                     target_energy=target_energy, 
                                     mode=mode, 
                                     target_tempo=target_tempo)
-
+    #creating empty list for the 20(?) songs Spotify will return as recommendations. 
+    #Could eventually limit the result to 1, but for now choosing random.
     song_bin = []                                        
     for track in results['tracks']:
         song_bin.append(track['external_urls']['spotify'])
@@ -38,7 +39,8 @@ def low_energy_high_mood(e, m):
                                     target_loudness=target_loudness, 
                                     mode=mode, 
                                     target_tempo=target_tempo)
-
+    #creating empty list for the 20(?) songs Spotify will return as recommendations. 
+    #Could eventually limit the result to 1, but for now choosing random.
     song_bin = []                                        
     for track in results['tracks']:
         song_bin.append(track['external_urls']['spotify'])
@@ -61,7 +63,8 @@ def low_energy_low_mood(e, m):
                                     target_loudness=target_loudness, 
                                     target_acousticness=target_acousticness, 
                                     target_tempo=target_tempo)
-
+    #creating empty list for the 20(?) songs Spotify will return as recommendations. 
+    #Could eventually limit the result to 1, but for now choosing random.
     song_bin = []                                        
     for track in results['tracks']:
         song_bin.append(track['external_urls']['spotify'])
@@ -84,7 +87,8 @@ def high_energy_low_mood(e, m):
                                     target_danceabiliity=target_danceabiliity, 
                                     target_acousticness=target_acousticness, 
                                     target_tempo=target_tempo)
-
+    #creating empty list for the 20(?) songs Spotify will return as recommendations. 
+    #Could eventually limit the result to 1, but for now choosing random.
     song_bin = []                                        
     for track in results['tracks']:
         song_bin.append(track['external_urls']['spotify'])
@@ -96,13 +100,13 @@ def high_energy_low_mood(e, m):
 
 #choose which function to run based on inputs
 def get_recipe(energy, mood):
-    if (energy > 5) and (mood > 5):
+    if (energy >= 5) and (mood >= 5):
         return high_energy_high_mood(energy, mood)
-    elif (energy < 5) and (mood > 5):
+    elif (energy < 5) and (mood >= 5):
         return low_energy_high_mood(energy,mood)
     elif (energy < 5) and (mood < 5):
         return low_energy_low_mood(energy,mood)
-    elif (energy > 5) and (mood < 5):
+    elif (energy >= 5) and (mood < 5):
         return high_energy_low_mood(energy,mood)
     else:
         print('Oops, nothing happened')
