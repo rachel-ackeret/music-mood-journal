@@ -3,6 +3,8 @@ from random import choice
 from server import spotify
 
 def high_energy_high_mood(e, m):
+    """Runs qualified entries and pushes the target metrics to Spotifys 
+    recommendation API request. Returns single song track ID."""
     #based on energy ranking
     target_danceabiliity = (e * .1)
     target_energy = (e * .1)
@@ -27,6 +29,8 @@ def high_energy_high_mood(e, m):
     return resulting_song_id
 
 def low_energy_high_mood(e, m):
+    """Runs qualified entries and pushes the target metrics to Spotifys 
+    recommendation API request. Returns single song track ID."""
     #based on ENERGY ranking
     target_energy = e * .1
     target_loudness = e * .1
@@ -51,6 +55,8 @@ def low_energy_high_mood(e, m):
     return resulting_song_id
 
 def low_energy_low_mood(e, m):
+    """Runs qualified entries and pushes the target metrics to Spotifys 
+    recommendation API request. Returns single song track ID."""
     #based on ENERGY ranking
     target_energy = e * .1
     target_loudness = e * .1
@@ -75,6 +81,8 @@ def low_energy_low_mood(e, m):
     return resulting_song_id
 
 def high_energy_low_mood(e, m):
+    """Runs qualified entries and pushes the target metrics to Spotifys 
+    recommendation API request. Returns single song track ID."""
     #based on ENERGY ranking
     target_danceabiliity = (e * .1)
     target_energy = (e * .1)

@@ -22,12 +22,13 @@ class User(db.Model, UserMixin):
     entries = db.relationship(
         "Entry",
         backref="user",
-        order_by="desc(Entry.created_at)",  # See: https://docs.sqlalchemy.org/en/14/orm/basic_relationships.html
+        order_by="desc(Entry.created_at)", 
     )
 
     def __repr__(self):
         return f"<User user_id={self.user_id} username={self.username} first_name={self.first_name} last_name={self.last_name}>"
     
+
     def get_id(self):
         """Override UserMixin.get_id."""
         
