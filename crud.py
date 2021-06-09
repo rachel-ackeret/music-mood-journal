@@ -108,6 +108,7 @@ def high_energy_low_mood(e, m):
 
 #choose which function to run based on inputs
 def get_recipe(energy, mood):
+    """direct user inputs to the correct music producing function based on their rankings"""
     if (energy >= 5) and (mood >= 5):
         return high_energy_high_mood(energy, mood)
     elif (energy < 5) and (mood >= 5):
