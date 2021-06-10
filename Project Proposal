@@ -29,8 +29,8 @@ A app that takes in user parameters about how the user is feeling on a day and p
 
 #### 2.0
 
-- Fine-tune algo: search spotify based on user's journal/ranking entry for that day filtered through their recently played artists
+- Fine-tune algo: search spotify based on user's journal/ranking entry for that day filtered through their recently played artists, or top genres
 - 
 
 #### 3.0
-- Can set default genre preference
+- 

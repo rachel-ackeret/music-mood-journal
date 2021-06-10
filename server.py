@@ -6,7 +6,7 @@ import requests
 import spotipy
 from random import choice
 from spotipy.oauth2 import SpotifyClientCredentials
-from flask_login import LoginManager, login_user, login_required, current_user
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 
 from model import connect_to_db, User, Entry, db
 import crud
@@ -23,6 +23,22 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.query.get(user_id)
 
+
+def unauthorized_handler(self, callback):
+        '''
+        This will set the callback for the `unauthorized` method, which among
+        other things is used by `login_required`. It takes no arguments, and
+        should return a response to be sent to the user instead of their
+        normal view.
+
+        :param callback: The callback for unauthorized users.
+        :type callback: callable
+        '''
+        self.unauthorized_callback = callback
+        return callback
+@login_manager.unauthorized_handler
+def unauthorized():
+    return redirect("/")
 #Spotipy credentials
 SPOTIPY_REDIRECT_URI="http://localhost:5000/"
 auth_manager = SpotifyClientCredentials()
@@ -95,6 +111,8 @@ def register():
 #redirect them to the login for users not logged in
 
 @app.route("/journal")
+
+
 @login_required
 def dashboard():
     return render_template("journal.html")
@@ -125,12 +143,13 @@ def save_journal():
 
     return redirect("/journal")
 
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/")
+
 
 #TEST DATA 
-
-@app.route("/test-data")
-def test_data():
-    return render_template("test-spotify.html")
 
 
 if __name__ == "__main__":
