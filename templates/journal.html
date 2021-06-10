@@ -10,7 +10,12 @@
           <h2>Create Your Journal Entry Today</h2>
           <form action ="/journal-saved" method="POST">
               <p>How are you feeling today?</p>
-              <textarea name = "journal_entry" rows="15"></textarea>    
+              <!--<textarea name = "journal_entry" rows="15"></textarea>-->
+              <div class="the-quill-editor">
+                <input name="journal_entry" type="hidden">    
+                  <div id="editor-container">
+                  </div>
+                </div>
               <p>Rank your energy today from Low to High</p>
               <input type="range" name="energy" min="1" max="10" value="5">
               <p>Rank your happiness today from Low to High</p>
@@ -25,7 +30,7 @@
         <div class="card bg-white shadow rounded my-3">
           <div class="card-body">
             <h3>Entry on {{entry.created_at.month}}/{{entry.created_at.day}}/{{entry.created_at.year}}</h3>
-            <p>{{entry.body}}</p>
+            <p>{{ entry.body }}</p>
             <iframe src="https://open.spotify.com/embed/track/{{entry.spotify_song_id}}" width="300" 
             height="80" frameborder="0" allowtransparency="true" allow="encrypted-media">
             </iframe>
@@ -36,5 +41,6 @@
         {% endfor %}
       </div>
     </div>
+    
   {% endif %}
 {% endblock %}

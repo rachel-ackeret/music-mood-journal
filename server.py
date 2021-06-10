@@ -26,7 +26,7 @@ def load_user(user_id):
 #Spotipy credentials
 SPOTIPY_REDIRECT_URI="http://localhost:5000/"
 auth_manager = SpotifyClientCredentials()
-spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+spotify_credentials = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 
 #base URL
 url = "https://api.spotify.com/v1/"
@@ -92,6 +92,7 @@ def register():
 
     return redirect("/")
 
+#redirect them to the login for users not logged in
 
 @app.route("/journal")
 @login_required
@@ -104,7 +105,6 @@ def dashboard():
 def save_journal():
     #get data from journal form
     body = request.form.get("journal_entry")
-    # user_id = session["current_user"]
     energy_ranking = int(request.form.get("energy"))
     mood_ranking = int(request.form.get("happiness"))
     spotify_song_id = crud.get_recipe(energy_ranking, mood_ranking)
@@ -136,6 +136,5 @@ def test_data():
 if __name__ == "__main__":
     app.debug = True
     connect_to_db(app)
-
     app.run(host="0.0.0.0")
     # app.run(use_reloader=True, use_debugger=True)

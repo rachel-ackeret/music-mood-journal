@@ -1,4 +1,7 @@
 
-shadow {
-    box-shadow: 2px 2px 13px -2px #616161;
+
+
+#editor-container.ql-container {
+    height: 14rem;
+    margin-bottom: 2rem;
 }

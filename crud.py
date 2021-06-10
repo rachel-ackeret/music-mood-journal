@@ -1,6 +1,6 @@
 import server
 from random import choice
-from server import spotify
+from server import spotify_credentials
 
 def high_energy_high_mood(e, m):
     """Runs qualified entries and pushes the target metrics to Spotifys 
@@ -12,7 +12,7 @@ def high_energy_high_mood(e, m):
     mode = 1
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    results = spotify.recommendations(seed_genres=['pop'], 
+    results = spotify_credentials.recommendations(seed_genres=['pop'], 
                                     target_danceabiliity=target_danceabiliity, 
                                     target_energy=target_energy, 
                                     mode=mode, 
