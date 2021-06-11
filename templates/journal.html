@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block body %}
 {% if current_user.is_authenticated %}
 <div class="grid bg-light">
@@ -35,6 +34,7 @@
             <iframe src="https://open.spotify.com/embed/track/{{entry.spotify_song_id}}" width="300" 
             height="80" frameborder="0" allowtransparency="true" allow="encrypted-media">
             </iframe>
+            <div class="mood-edit-react-component"></div>
             <p>Mood: {{entry.mood_ranking}}</p>
             <p>Energy: {{entry.energy_ranking}}</p>
           </div>
@@ -44,4 +44,8 @@
     </div>
     
   {% endif %}
+
+{% block js %}
+
+{% endblock %}
 {% endblock %}

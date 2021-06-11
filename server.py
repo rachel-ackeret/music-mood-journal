@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, flash, redirect, session
-
 from pprint import pformat
 import os
 import requests
@@ -25,17 +24,18 @@ def load_user(user_id):
 
 
 def unauthorized_handler(self, callback):
-        '''
-        This will set the callback for the `unauthorized` method, which among
+    """This will set the callback for the `unauthorized` method, which among
         other things is used by `login_required`. It takes no arguments, and
         should return a response to be sent to the user instead of their
         normal view.
 
         :param callback: The callback for unauthorized users.
-        :type callback: callable
-        '''
-        self.unauthorized_callback = callback
-        return callback
+        :type callback: callable"""
+
+    self.unauthorized_callback = callback
+    return callback
+
+
 @login_manager.unauthorized_handler
 def unauthorized():
     return redirect("/")
@@ -46,7 +46,6 @@ spotify_credentials = spotipy.Spotify(client_credentials_manager=SpotifyClientCr
 
 #base URL
 url = "https://api.spotify.com/v1/"
-
 
 # HOMEPAGE for LOGIN & REGISTRATION
 @app.route("/")
