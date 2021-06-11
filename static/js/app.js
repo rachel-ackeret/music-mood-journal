@@ -2,7 +2,7 @@
 class MoodRating extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { editMode: "On" };
+    this.state = { editMode: "Off" };
   }
   render() {
     return ( <div><a href="">Edit</a></div>
