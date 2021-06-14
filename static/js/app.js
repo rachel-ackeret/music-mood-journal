@@ -50,13 +50,19 @@ function EditableMoodRating(props) {
   };
 
   const handleSaveModeButtonClick = () => {
-    setEditable(!editable)
+    setEditable(!editable);
+
+    // Make post request to update rating in DB
+    $.post(`/api/entry/${props.entryId}`, {happiness: rating}, (res) => {
+      console.log(res);
+
+      setRating(res.mood_ranking);
+    });
   };
 
   const handleRatingChange = (e) => {
     setRating(e.target.value);
-    console.log(rating);
-  }
+  };
 
   return (
     <div>
@@ -65,7 +71,7 @@ function EditableMoodRating(props) {
       <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick}>
         {editable ? 'Save' : 'Edit Me'}
       </button>
-      <div style={{display: editable ? 'block' : 'none' }}>
+      <div style={{display: editable ? null : 'none' }}>
         <p>Rank your mood today from Low to High</p>
         <input type="range" name="happiness" min="1" max="10" value={rating} onChange={handleRatingChange}/>
       </div>
@@ -76,6 +82,6 @@ function EditableMoodRating(props) {
 
 
 ReactDOM.render(
-  <EditableMoodRating rating={3} />,
+  <EditableMoodRating entryId={58} rating={3} />,
   document.querySelector('#test-mood-rating')
 );

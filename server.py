@@ -110,8 +110,6 @@ def register():
 #redirect them to the login for users not logged in
 
 @app.route("/journal")
-
-
 @login_required
 def dashboard():
     return render_template("journal.html")
@@ -146,6 +144,55 @@ def save_journal():
 def logout():
     logout_user()
     return redirect("/")
+    
+
+@app.route("/api/entry/<entry_id>", methods=["POST"])
+def edit_entry(entry_id):
+    """Edit journal entry.
+    
+    Arguments:
+        - journal_entry: optional, if present this is used to update body of entry
+        - energy: optional, if present this is used to update energy
+          of entry
+        - happiness: optional, if present this is used to update mood
+          of entry 
+    """
+    
+    body = request.form.get("journal_entry")
+    energy_ranking = request.form.get("energy")
+    mood_ranking = request.form.get("happiness")
+
+    journal_entry = Entry.query.get(entry_id)
+    
+    if body:
+        journal_entry.body = body
+    if energy_ranking:
+        journal_entry.energy_ranking = int(energy_ranking)
+        energy_ranking_is_updated = True
+    else:
+        energy_ranking = journal_entry.energy_ranking
+    if mood_ranking:
+        journal_entry.mood_ranking = int(mood_ranking)
+        mood_ranking_is_updated = True
+    else: 
+        mood_ranking = journal_entry.mood_ranking 
+    
+    #Refresh journal entry song if either mood or energy is updated
+    if mood_ranking_is_updated or energy_ranking_is_updated:
+        journal_entry.spotify_song_id = crud.get_recipe(journal_entry.energy_ranking, journal_entry.mood_ranking)
+    
+    db.session.add(journal_entry)
+    db.session.commit()
+
+    return {
+        "id": journal_entry.id,
+        "body": journal_entry.body,
+        "created_at": journal_entry.created_at,
+        "spotify_song_id": journal_entry.spotify_song_id,
+        "user_id": journal_entry.user_id,
+        "energy_ranking": journal_entry.energy_ranking,
+        "mood_ranking": journal_entry.mood_ranking
+    }
 
 
 #TEST DATA 

@@ -38,7 +38,7 @@ def low_energy_high_mood(e, m):
     mode = 1
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    results = spotify.recommendations(seed_genres=['pop'], 
+    results = spotify_credentials.recommendations(seed_genres=['pop'], 
                                     target_energy=target_energy, 
                                     target_loudness=target_loudness, 
                                     mode=mode, 
@@ -64,7 +64,7 @@ def low_energy_low_mood(e, m):
     target_acousticness = (m * .1) + .5 
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    results = spotify.recommendations(seed_genres=['pop'], 
+    results = spotify_credentials.recommendations(seed_genres=['pop'], 
                                     target_energy=target_energy, 
                                     target_loudness=target_loudness, 
                                     target_acousticness=target_acousticness, 
@@ -90,7 +90,7 @@ def high_energy_low_mood(e, m):
     target_acousticness = (m * .1) + .5 
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    results = spotify.recommendations(seed_genres=['pop'], 
+    results = spotify_credentials.recommendations(seed_genres=['pop'], 
                                     target_energy=target_energy, 
                                     target_danceabiliity=target_danceabiliity, 
                                     target_acousticness=target_acousticness, 
