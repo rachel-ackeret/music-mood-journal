@@ -53,17 +53,11 @@ function EditableMoodRating(props) {
     setEditable(!editable)
   };
 
-  const handleChange = (e) => {
-    this.setRating(e.target.value);
+  const handleRatingChange = (e) => {
+    setRating(e.target.value);
     console.log(rating);
   }
 
-  if (editable) {
-    return <div style={{display: editable ? 'block' : 'none' }}>
-    <p>Rank your mood today from Low to High</p>
-    <input type="range" name="happiness" min="1" max="10" value={rating} onChange={handleChange}/>
-  </div>
-  }
   return (
     <div>
       <pre><b>DEBUG:</b> rating: {rating}, editable: {editable}</pre>
@@ -71,6 +65,10 @@ function EditableMoodRating(props) {
       <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick}>
         {editable ? 'Save' : 'Edit Me'}
       </button>
+      <div style={{display: editable ? 'block' : 'none' }}>
+        <p>Rank your mood today from Low to High</p>
+        <input type="range" name="happiness" min="1" max="10" value={rating} onChange={handleRatingChange}/>
+      </div>
     </div>
   );
 
