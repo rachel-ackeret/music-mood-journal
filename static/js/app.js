@@ -46,21 +46,38 @@ function EditableMoodRating(props) {
   
   // Toggle edit mode (ex.: if `editable` === true, set to false)
   const handleEditModeButtonClick = () => {
-    setEditable(!editable);
+    setEditable(!editable);    
   };
 
+  const handleSaveModeButtonClick = () => {
+    setEditable(!editable)
+  };
+
+  const handleChange = (e) => {
+    this.setRating(e.target.value);
+    console.log(rating);
+  }
+
+  if (editable) {
+    return <div style={{display: editable ? 'block' : 'none' }}>
+    <p>Rank your mood today from Low to High</p>
+    <input type="range" name="happiness" min="1" max="10" value={rating} onChange={handleChange}/>
+  </div>
+  }
   return (
     <div>
       <pre><b>DEBUG:</b> rating: {rating}, editable: {editable}</pre>
+
       <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick}>
         {editable ? 'Save' : 'Edit Me'}
       </button>
     </div>
   );
-}
+
+} 
 
 
 ReactDOM.render(
-  <EditableMoodRating rating={5} />,
+  <EditableMoodRating rating={3} />,
   document.querySelector('#test-mood-rating')
 );
