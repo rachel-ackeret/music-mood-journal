@@ -34,9 +34,10 @@
             <iframe src="https://open.spotify.com/embed/track/{{entry.spotify_song_id}}" width="300" 
             height="80" frameborder="0" allowtransparency="true" allow="encrypted-media">
             </iframe>
-            <div id="test-mood-rating"></div>
             <p>Mood: {{entry.mood_ranking}}</p>
+            <div id="mood-rating"></div>
             <p>Energy: {{entry.energy_ranking}}</p>
+            <div id="energy-rating"></div>
           </div>
         </div>
         {% endfor %}

@@ -168,17 +168,17 @@ def edit_entry(entry_id):
         journal_entry.body = body
     if energy_ranking:
         journal_entry.energy_ranking = int(energy_ranking)
-        energy_ranking_is_updated = True
+        energy_ranking_updated = True
     else:
         energy_ranking = journal_entry.energy_ranking
     if mood_ranking:
         journal_entry.mood_ranking = int(mood_ranking)
-        mood_ranking_is_updated = True
+        mood_ranking_updated = True
     else: 
         mood_ranking = journal_entry.mood_ranking 
     
     #Refresh journal entry song if either mood or energy is updated
-    if mood_ranking_is_updated or energy_ranking_is_updated:
+    if mood_ranking_updated or energy_ranking_updated:
         journal_entry.spotify_song_id = crud.get_recipe(journal_entry.energy_ranking, journal_entry.mood_ranking)
     
     db.session.add(journal_entry)
