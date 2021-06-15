@@ -41,8 +41,6 @@ function EditableMoodRating(props) {
   
     return (
       <div>
-        <pre><b>DEBUG:</b> mood: {rating}, editable: {editable}</pre>
-  
         <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick}>
           {editable ? 'Save' : 'Edit Me'}
         </button>
@@ -83,8 +81,6 @@ function EditableMoodRating(props) {
   
     return (
       <div>
-        <pre><b>DEBUG:</b> Energy: {rating}, editable: {editable}</pre>
-  
         <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick}>
           {editable ? 'Save' : 'Edit Me'}
         </button>
@@ -112,10 +108,12 @@ function EditableBodyText(props) {
       setEditable(!editable);
       var journalEntry = document.querySelector('input[name=journal_entry_edit]');
       journalEntry.value = quill_edit.root.innerHTML;
+      console.log(journalEntry.value)
+      let newValue = journalEntry.value
       console.log('I am setting state to saved.')
   
       // Make post request to update rating in DB
-      $.post(`/api/entry-edit/${props.entryId}`, {journal_entry: bodyText}, (res) => {
+      $.post(`/api/entry-edit/${props.entryId}`, {journal_entry_edit: newValue}, (res) => {
         console.log(res);
         console.log('saving update to database through flask')
         setBodyText(res.body);
@@ -123,8 +121,6 @@ function EditableBodyText(props) {
     };
     return (
       <div>
-        <pre><b>DEBUG:</b> Journal Entry: {bodyText}, editable: {editable}</pre>
-  
         <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick} id="form-edit">
         {editable ? 'Save' : 'Edit Me'}
         </button>
@@ -150,15 +146,14 @@ function getDatabaseEntry(entryId) {
         dataType: "json",             
         success: function(response){                    
             userclass = response;
-            console.log(userclass)
         }
     });
-    return userclass
+    return userclass;
 }
 
 
   ReactDOM.render(
-    <EditableMoodRating entryId={60} rating={2} />,
+    <EditableMoodRating entryId={60} rating={5} />,
     document.querySelector('#mood-rating')
   );
   
