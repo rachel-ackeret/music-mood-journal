@@ -146,7 +146,7 @@ def logout():
     return redirect("/")
     
 
-@app.route("/api/entry/<entry_id>", methods=["POST"])
+@app.route("/api/entry-edit/<entry_id>", methods=["POST"])
 def edit_entry(entry_id):
     """Edit journal entry.
     
@@ -194,6 +194,19 @@ def edit_entry(entry_id):
         "mood_ranking": journal_entry.mood_ranking
     }
 
+
+@app.route("/api/entry/<entry_id>", methods=["POST"])
+def fetch_entry(entry_id):
+    journal_entry = Entry.query.get(entry_id)
+    return {
+        "id": journal_entry.id,
+        "body": journal_entry.body,
+        "created_at": journal_entry.created_at,
+        "spotify_song_id": journal_entry.spotify_song_id,
+        "user_id": journal_entry.user_id,
+        "energy_ranking": journal_entry.energy_ranking,
+        "mood_ranking": journal_entry.mood_ranking
+    }
 
 #TEST DATA 
 
