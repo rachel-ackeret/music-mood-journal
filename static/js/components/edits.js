@@ -98,66 +98,65 @@ function EditableMoodRating(props) {
   } 
   
   //BODY TEXT 
-  function EditableBodyText(props) {
+function EditableBodyText(props) {
     const [bodyText, setBodyText] = React.useState(props.bodyText);
     const [editable, setEditable] = React.useState(false);
     
     // Toggle edit mode (ex.: if `editable` === true, set to false)
     const handleEditModeButtonClick = () => {
       setEditable(!editable);    
+      console.log('I am setting state to edit.')
     };
   
     const handleSaveModeButtonClick = () => {
       setEditable(!editable);
+      var journalEntry = document.querySelector('input[name=journal_entry_edit]');
+      journalEntry.value = quill_edit.root.innerHTML;
+      console.log('I am setting state to saved.')
   
       // Make post request to update rating in DB
       $.post(`/api/entry-edit/${props.entryId}`, {journal_entry: bodyText}, (res) => {
         console.log(res);
-  
+        console.log('saving update to database through flask')
         setBodyText(res.body);
       });
     };
-  
-    const handleRatingChange = (e) => {
-      setBodyText(e.target.value);
-    };
-  /// Testing AJAX get
-    let userclass = {}
-    $(document).ready(function() {             
-        $.ajax({    //create an ajax request to display.php
-            type: "POST",
-            url: `/api/entry/${props.entryId}`,             
-            dataType: "json",             
-            success: function(response){                    
-                userclass = response;
-                console.log(userclass)
-            }
-        });
-    });
-
     return (
       <div>
         <pre><b>DEBUG:</b> Journal Entry: {bodyText}, editable: {editable}</pre>
   
-        <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick}>
+        <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick} id="form-edit">
         {editable ? 'Save' : 'Edit Me'}
         </button>
         <div style={{display: editable ? null : 'none' }}>
           <p>Edit your journal entry for this day</p>
           <div className="the-quill-editor">
-            <input name="journal_entry" type="hidden" />    
-            <div id="editor-container"></div>
+            <input name="journal_entry_edit" type="hidden"/>    
+            <div id="edit-existing-entry"></div>
           </div>
         </div>
         <p>Journal Entry: {bodyText}</p>
+        
       </div>
     );
   } 
   
+ /// Testing AJAX
+let userclass = {}
+function getDatabaseEntry(entryId) {             
+    $.ajax({    //create an ajax request to Flask Route for database return
+        type: "POST",
+        url: `/api/entry/${entryId}`,             
+        dataType: "json",             
+        success: function(response){                    
+            userclass = response;
+            console.log(userclass)
+        }
+    });
+    return userclass
+}
 
-  //TESTING AJAX
 
-  
   ReactDOM.render(
     <EditableMoodRating entryId={60} rating={2} />,
     document.querySelector('#mood-rating')
@@ -172,5 +171,14 @@ function EditableMoodRating(props) {
     <EditableBodyText entryId={60} bodyText={'not too bad'} />,
     document.querySelector('#body-text')
   );
-  
+
+
+//Set up Quill
+var quill_edit = new Quill('#edit-existing-entry', {
+    modules: {
+        toolbar: true
+      },
+      theme: 'snow'
+});
+
 // export { EditMoodRanking, EditEnergyRanking, EditBodyText };

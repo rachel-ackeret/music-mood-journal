@@ -23,15 +23,15 @@
           {% block body %}
           BODY OF PAGE GOES HERE VIA INHERITANCE
           {% endblock %}
-          <script src="../static/js/main.js"></script>  
           <!-- Load React. -->
           <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
           <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
           <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
 
-          <!--<script src="../static/js/app.js" type="text/babel"></script>-->
+          <script src="../static/js/app.js" type="text/babel"></script>
           <script src="../static/js/components/edits.js" type="text/babel"></script>
+          <script src="../static/js/main.js"></script>  
           {% block js %}
           {% endblock %}
     </body>

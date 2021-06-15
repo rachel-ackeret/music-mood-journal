@@ -158,12 +158,14 @@ def edit_entry(entry_id):
           of entry 
     """
     
-    body = request.form.get("journal_entry")
+    body = request.form.get("journal_entry_edit")
     energy_ranking = request.form.get("energy")
     mood_ranking = request.form.get("happiness")
 
     journal_entry = Entry.query.get(entry_id)
     
+    mood_ranking_updated = ''
+    energy_ranking_updated = ''
     if body:
         journal_entry.body = body
     if energy_ranking:
@@ -176,6 +178,7 @@ def edit_entry(entry_id):
         mood_ranking_updated = True
     else: 
         mood_ranking = journal_entry.mood_ranking 
+    
     
     #Refresh journal entry song if either mood or energy is updated
     if mood_ranking_updated or energy_ranking_updated:
