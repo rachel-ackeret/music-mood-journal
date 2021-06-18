@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from pprint import pformat
 import os
 import requests
@@ -211,7 +211,44 @@ def fetch_entry(entry_id):
         "mood_ranking": journal_entry.mood_ranking
     }
 
+
+@app.route("/api/entries/")
+def get_latest_entries():
+    #custom_limit = int(request.args.get("limit", 10))
+    journal_entries = Entry.query.all()
+
+    entries_as_json = []
+    for journal_entry in journal_entries:
+        entries_as_json.append({
+            "id": journal_entry.id,
+            "body": journal_entry.body,
+            "created_at": journal_entry.created_at,
+            "spotify_song_id": journal_entry.spotify_song_id,
+            "user_id": journal_entry.user_id,
+            "energy_ranking": journal_entry.energy_ranking,
+            "mood_ranking": journal_entry.mood_ranking
+        })
+        
+    return jsonify(entries_as_json)
+
+
+@app.route("/chart-response/")
+def get_chart_response():
+    chart_response = {}
+    chart_respone[month_view] = request.form.get("month")
+    chart_respone[week_view] = request.form.get("week")
+    chart_respone[add_five] = request.form.get("addFive")
+    chart_respone[subtract_five] = request.form.get("minusFive")
+    
+    return chart_response
+
 #TEST DATA 
+
+@app.route("/test-chart")
+@login_required
+def testchart():
+    return render_template("test-chart.html")
+
 
 
 if __name__ == "__main__":

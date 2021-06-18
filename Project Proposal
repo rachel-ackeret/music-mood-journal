@@ -38,6 +38,10 @@ A app that takes in user parameters about how the user is feeling on a day and p
   - Fine-tune algo: filter spotify recommendation through user's recently played artists, or top genres
 - (Optional) Social feature, friendships with other users to see their daily song. 
 
+- weather api
+- social media sharing 
+
+
 
 #### 3.0
-- I'm assuming 
+

@@ -1,0 +1,24 @@
+
+
+{% extends 'base.html' %}
+{% block body %}
+<div class="grid ">
+    <h1 class="text-center">Hello there</h1>
+    <div class="container-sm center-block d-flex">
+        <div class="col-2">
+            <button id="remove-days">Narrow 5 Days</buton>
+            <button id="add-days">Add 5 Days</buton>
+        </div>
+        <div class="col-8">
+            <div class="center-block">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+        <div class="col-2">
+            <button id="month-view">Month</button>
+            <button id="week-view">Week</button>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

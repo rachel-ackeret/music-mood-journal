@@ -14,6 +14,20 @@
 // PROPS
 // Initial Mood Rating
 
+//Set variables for props
+
+// $.get('/api/entries', {}, (res) => {
+//   console.log(res);
+//   journalDate = [];
+//   moodRating = [];
+//   energyRating = [];
+//   allEntries = res;
+//   for (entry of res) {
+//     journalDate.push(moment(entry.created_at).format('MMMM Do'));
+//     moodRating.push(entry.mood_ranking);
+//     energyRating.push(entry.energy_ranking);
+//   };
+// });
 //MOOD RATING
 function EditableMoodRating(props) {
     const [rating, setRating] = React.useState(props.rating);
@@ -138,8 +152,19 @@ function EditableBodyText(props) {
   } 
   
  /// Testing AJAX
-let userclass = {}
-function getDatabaseEntry(entryId) {             
+let userclass = {};
+// function getDatabaseEntry(entryId) {  
+//     $.ajax({    //create an ajax request to Flask Route for database return
+//         type: "POST",
+//         url: `/api/entry/${entryId}`,             
+//         dataType: "json",             
+//         success: function(response){                    
+//             userclass = response;
+//         }
+//     });
+//     return userclass;
+// }
+const getDatabaseEntry = (entryId) => {
     $.ajax({    //create an ajax request to Flask Route for database return
         type: "POST",
         url: `/api/entry/${entryId}`,             
@@ -148,22 +173,30 @@ function getDatabaseEntry(entryId) {
             userclass = response;
         }
     });
-    return userclass;
-}
+    return userclass;   
+};
 
+const moodRatingProp = getDatabaseEntry(60).mood_ranking;
+const energyRatingProp = getDatabaseEntry(60).energy_ranking;
+const bodyTextProp = getDatabaseEntry(60).body;
 
-  ReactDOM.render(
-    <EditableMoodRating entryId={60} rating={5} />,
+const moodRatingProps = <EditableMoodRating entryId={60} rating={moodRatingProp} />;
+const energyRatingProps = <EditableEnergyRating entryId={60} rating={energyRatingProp} />;
+const bodyTextProps = <EditableBodyText entryId={60} bodyText={bodyTextProp} />;
+  
+
+ReactDOM.render(
+    moodRatingProps,
     document.querySelector('#mood-rating')
   );
   
   ReactDOM.render(
-    <EditableEnergyRating entryId={60} rating={3} />,
+    energyRatingProps,
     document.querySelector('#energy-rating')
   );
   
   ReactDOM.render(
-    <EditableBodyText entryId={60} bodyText={'not too bad'} />,
+    bodyTextProps,
     document.querySelector('#body-text')
   );
 
