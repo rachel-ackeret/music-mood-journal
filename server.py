@@ -215,7 +215,14 @@ def fetch_entry(entry_id):
 @app.route("/api/entries/")
 def get_latest_entries():
     #custom_limit = int(request.args.get("limit", 10))
-    journal_entries = Entry.query.all()
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    
+    entries_query = Entry.query
+    if start_date and end_date:
+        entries_query = entries_query.filter(Entry.created_at.between(start_date, end_date))
+
+    journal_entries = entries_query.all()
 
     entries_as_json = []
     for journal_entry in journal_entries:
