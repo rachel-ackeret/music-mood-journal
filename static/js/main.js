@@ -44,9 +44,11 @@ const [startDate, endDate] = getStartEndDateWeek();
 const moodData = []
 const energyData = []
 let testingDateRange = [];
-let entryDateList = []
-let dateLabels = []
-
+let entryDateList = [];
+let dateLabels = [];
+let calendarView = 'week';
+let calendarPositionWeeks = 0;
+let calendarPositionMonths = 0;
 
 $.get(
   '/api/entries',
@@ -64,25 +66,34 @@ $.get(
     }
 
     // Prepare date lists to be compared against each other to set up data sets for chart.    
-    //Set dates into uniform format
+    //Set dates from "user entries" into uniform format
     for (item of dateRange) {
       entryDateList.push(moment(item).format('MM-DD-YYYY'));
     }
 
-    //get list of days for a week, format in the same way as the other list. 
+    //get list of days for one week, format in the same way as the other list. 
     let weekDates = [];
     for (let i = 0; i < 7; i++) {
       weekDates.push(moment(startDate).add(i, 'days'));
       testingDateRange.push(moment(weekDates[i]).format('MM-DD-YYYY'));
     };
-    
+
+    let monthDates = [];
+    for (let i = 0; i < 31; i++) {
+      monthDates.push(moment(startDate).add(i, 'days'));
+      testingDateRange.push(moment(monthDates[i]).format('MM-DD-YYYY'));
+    };
+    // Start date should be default to this past sunday.
+    // Start date will be saved from current rendering, and adjusted based on button click
+      // adjustment will be through the add or subtract button, based on param input
+      
     //loop through list of dates, 
     //if date matches an entry, then place that into the list I'm sending "data"
     //if the date from the week does not match an entry, then add 1
     for (let i = 0; i < 7; i++) {
       idx = entryDateList.indexOf(testingDateRange[i]);
 
-      //Crete date labels for the chart in correct format.
+      //Create date labels for the chart in correct format.
       dateLabels.push(moment(testingDateRange[i]).format('dddd, MMM Do'));
 
       //if the index is found, push the mood rating data to moodData for the chart
@@ -146,12 +157,68 @@ $.get(
       document.getElementById('myChart'),
       config
     );
+    
 
 
   }
 );
-  
 
+function changeView(action) {
+  if (action === 'month') {
+    calendarView = 'month';
+    changeStartDate = moment().startOf('month')
+    console.log(changeStartDate)
+  } else if (action === 'week') {
+    calendarView = 'week';
+    changeStartDate = moment().startOf('week')
+    console.log(changeStartDate)
+  } else {
+    console.log('try again!')
+  }
+}
+
+function changeRange(action) {
+
+  if (calendarView === 'week' && action === 'prev') {
+    calendarPositionWeeks -= 7;
+    changeStartDate = moment().day('Sunday').add(calendarPositionWeeks, 'days');
+    console.log(changeStartDate);
+    console.log(calendarPositionWeeks);
+  } else if (calendarView === 'week' && action === 'next') {
+    calendarPositionWeeks += 7;
+    changeStartDate = moment().day('Sunday').add(calendarPositionWeeks, 'days');
+    console.log(changeStartDate);
+    console.log(calendarPositionWeeks);
+  } else if (calendarView === 'month' && action === 'prev') {
+    calendarPositionMonths -= 1;
+    changeStartDate = moment().add(calendarPositionMonths, 'months').startOf('month')
+    console.log(changeStartDate);
+  } else if (calendarView === 'month' && action === 'next') {
+    calendarPositionMonths += 1;
+    changeStartDate = moment().add(calendarPositionMonths, 'months').startOf('month')
+    console.log(changeStartDate);
+  } else {
+    console.log('Try again!')
+  }
+}
+
+
+    //RENDER CHART.JS
+    $("#previous-view").click(function(){
+      changeRange('prev');
+    });
+    
+    $("#next-view").click(function(){
+      changeRange('next');
+    });
+    
+    $("#month-view").click(function(){
+      changeView('month');
+    });
+    
+    $("#week-view").click(function(){
+      changeView('week');
+    });
 
 // for (entry of getStartEndDateWeek()) {
 //   dateRange.push(entry.created_at);
@@ -162,12 +229,3 @@ $.get(
   //CHART.JS CONFIG 
 
   
-
-  //RENDER CHART.JS
-  $("#previous-view").click(function(){
-    change_view(-7);
-  });
-  
-  $("#next-view").click(function(){
-    change_view(7);
-  });
