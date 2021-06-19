@@ -81,15 +81,21 @@ $.get(
     //if the date from the week does not match an entry, then add 1
     for (let i = 0; i < 7; i++) {
       idx = entryDateList.indexOf(testingDateRange[i]);
+
+      //Crete date labels for the chart in correct format.
       dateLabels.push(moment(testingDateRange[i]).format('dddd, MMM Do'));
-      console.log(idx);
+
       //if the index is found, push the mood rating data to moodData for the chart
+      //or if the date is beyond today, end the loop and don't add data to moodData
+      //if no entry found for previous days, add zero to list. Hope to change later
       if (idx !== -1) {
         moodData.push(moodRating[idx]);
         energyData.push(energyRating[idx]);
+      } else if (testingDateRange[i] >= moment().format('MM-DD-YYYY')) {
+        break;
       } else {
-        moodData.push(1);
-        energyData.push(1);
+        moodData.push(0);
+        energyData.push(0);
       }
     }
     
@@ -115,16 +121,19 @@ $.get(
       options: {
         responsive: true,
         scales: {
-          y: {
-            suggstedMin: 10,
-          },
-          xAxes: [
-            {
-              type: 'time',
-              distribution: 'series',
+          x: [{
+            display: false,
+          }],
+          y: [{
+            display: false,
+            ticks: {
               beginAtZero: true,
+              //can't figure out how to get the chart 10 points high!
+              //Also want to add in x for any time entry is 0
+              suggestedMin: 1,
+              suggestedMax: 10,
             },
-          ]
+          }]
         },
         elements: {
           line: {
@@ -155,10 +164,10 @@ $.get(
   
 
   //RENDER CHART.JS
-  $("#remove-days").click(function(){
-    setRange(5);
+  $("#previous-view").click(function(){
+    change_view(-7);
   });
   
-  $("#add-days").click(function(){
-    setRange(-5);
+  $("#next-view").click(function(){
+    change_view(7);
   });
