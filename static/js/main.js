@@ -36,7 +36,6 @@ function getStartEndDateWeek() {
   return [ startDate, endDate ];
 }
 
-let allEntries;
 let dateRange = [];
 let moodRating = [];
 let energyRating = [];
@@ -168,7 +167,6 @@ function changeView(action) {
     },
     (res) => {
       console.log(res);
-      allEntries = res;
       for (const prop of res) {
         dateRange.push(prop.created_at);
         moodRating.push(prop.mood_ranking);
@@ -187,24 +185,49 @@ function changeRange(action) {
   if (calendarView === 'week' && action === 'prev') {
     calendarPositionWeeks -= 7;
     changeStartDate = moment().day('Sunday').add(calendarPositionWeeks, 'days');
+    changeEndDate = moment(changeStartDate).endOf('week');
     console.log(changeStartDate);
     console.log(calendarPositionWeeks);
   } else if (calendarView === 'week' && action === 'next') {
     calendarPositionWeeks += 7;
     changeStartDate = moment().day('Sunday').add(calendarPositionWeeks, 'days');
+    changeEndDate = moment(changeStartDate).endOf('week');
     console.log(changeStartDate);
     console.log(calendarPositionWeeks);
   } else if (calendarView === 'month' && action === 'prev') {
     calendarPositionMonths -= 1;
     changeStartDate = moment().add(calendarPositionMonths, 'months').startOf('month')
+    changeEndDate = moment(changeStartDate).endOf('month');
     console.log(changeStartDate);
   } else if (calendarView === 'month' && action === 'next') {
     calendarPositionMonths += 1;
     changeStartDate = moment().add(calendarPositionMonths, 'months').startOf('month')
+    changeEndDate = moment(changeStartDate).endOf('month');
     console.log(changeStartDate);
   } else {
     console.log('Try again!')
   }
+
+  $.get(
+    '/api/entries',
+    {
+      start_date: changeStartDate.toISOString(),
+      end_date: changeEndDate.toISOString()
+    },
+    (res) => {
+      console.log(res);
+      for (const prop of res) {
+        dateRange.push(prop.created_at);
+        moodRating.push(prop.mood_ranking);
+        energyRating.push(prop.energy_ranking);
+      }
+      [ dateLabels, moodData, energyData ] = setUpChartData(changeStartDate, dateRange, moodRating, energyRating);
+      myChart.data.labels = dateLabels;
+      myChart.data.datasets[0].data = moodData;
+      myChart.data.datasets[1].data = energyData;
+      myChart.update();
+    }
+  );
 }
 
 const config = {
