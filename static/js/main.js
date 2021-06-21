@@ -59,7 +59,6 @@ $.get(
   },
   (res) => {
     console.log(res);
-    allEntries = res;
     for (const prop of res) {
       dateRange.push(prop.created_at);
       moodRating.push(prop.mood_ranking);
