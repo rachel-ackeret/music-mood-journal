@@ -45,7 +45,7 @@ class Entry(db.Model):
                        )
     body = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    #updated_at = db.Column(db.DateTime, nullable=True)
+    updated_at = db.Column(db.DateTime, nullable=True)
     spotify_song_id = db.Column(db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     energy_ranking = db.Column(db.Float, nullable=False)
@@ -53,6 +53,42 @@ class Entry(db.Model):
 
     def __repr__(self):
         return f"<Entry id={self.id} created_at={self.created_at} spotify_song_id={self.spotify_song_id} user_id={self.user_id}>"
+
+
+class WeatherDetails(db.Model):
+    """Weather."""
+
+    __tablename__ = "weather_details"
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                       autoincrement=True,
+    )
+    temperature = db.Column(db.Float, nullable=False)
+    clouds = db.Column(db.Float, nullable=False)
+    weather_description = db.Column(db.String, nullable=False)
+    weather_id = db.Column(db.Integer, nullable=False)
+    weather_icon = db.Column(db.String, nullable=False)
+    zip_code = db.Column(db.String, nullable=False)
+    entry_id = db.Column(db.Integer, db.ForeignKey(Entry.id))
+   
+    entry = db.relationship('Entry', backref='weather_details')
+
+
+class SongDetails(db.Model):
+    """SongDetails."""
+
+    __tablename__ = "song_details"
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                       autoincrement=True,
+    )
+    song_image = db.Column(db.String, nullable=True)
+    song_preview = db.Column(db.String, nullable=True)
+    entry_id = db.Column(db.Integer, db.ForeignKey(Entry.id))
+   
+    entry = db.relationship('Entry', backref='song_details')
 
 
 #Connect to the database
@@ -69,4 +105,4 @@ def connect_to_db(flask_app, db_uri="postgresql:///database", echo=True):
 if __name__ == "__main__":
     from server import app
     #connect_to_db(app) 
-    #may or may not need this.
+    #may or may not need this. 

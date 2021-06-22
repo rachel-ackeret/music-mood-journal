@@ -1,6 +1,27 @@
 import server
 from random import choice
-from server import spotify_credentials
+from server import spotify_credentials, WEATHER_KEY
+import requests
+
+def return_weather_data(zipcode):
+    #api.openweathermap.org/data/2.5/weather?zip={zip code}&appid={API key}
+
+    query = 'https://api.openweathermap.org/data/2.5/weather'
+    zipcode_string = '?zip=' + zipcode
+    apikey_string = ',us&appid=' + WEATHER_KEY
+    resulting_weather = query + zipcode_string + apikey_string
+    
+ 
+
+    res = (requests.get(resulting_weather)).json()
+    print(res)   
+
+    temperature = res['main']['temp']
+    clouds = res['clouds']['all']
+    weather_id = res['weather'][0]['id']
+    weather_description = res['weather'][0]['description']
+    weather_icon = res['weather'][0]['icon']
+    return [temperature, clouds, weather_id, weather_description, weather_icon]
 
 def high_energy_high_mood(e, m):
     """Runs qualified entries and pushes the target metrics to Spotifys 
@@ -12,21 +33,17 @@ def high_energy_high_mood(e, m):
     mode = 1
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    results = spotify_credentials.recommendations(seed_genres=['pop'], 
+    resulting_song = spotify_credentials.recommendations(seed_genres=['pop'], 
                                     target_danceabiliity=target_danceabiliity, 
                                     target_energy=target_energy, 
                                     mode=mode, 
-                                    target_tempo=target_tempo)
-    #creating empty list for the 20(?) songs Spotify will return as recommendations. 
-    #Could eventually limit the result to 1, but for now choosing random.
+                                    target_tempo=target_tempo,
+                                    limit=1)
     song_bin = []                                        
-    for track in results['tracks']:
-        song_bin.append(track['external_urls']['spotify'])
+    for track in resulting_song['tracks']:
+        song_bin.append(track['id'])
 
-    result_c = choice(song_bin)
-    resulting_song_id = result_c.strip("https://open.spotify.com/track/")
-
-    return resulting_song_id
+    return song_bin
 
 def low_energy_high_mood(e, m):
     """Runs qualified entries and pushes the target metrics to Spotifys 
@@ -38,21 +55,17 @@ def low_energy_high_mood(e, m):
     mode = 1
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    results = spotify_credentials.recommendations(seed_genres=['pop'], 
+    resulting_song = spotify_credentials.recommendations(seed_genres=['pop'], 
                                     target_energy=target_energy, 
                                     target_loudness=target_loudness, 
                                     mode=mode, 
-                                    target_tempo=target_tempo)
-    #creating empty list for the 20(?) songs Spotify will return as recommendations. 
-    #Could eventually limit the result to 1, but for now choosing random.
+                                    target_tempo=target_tempo,
+                                    limit=1)
     song_bin = []                                        
-    for track in results['tracks']:
-        song_bin.append(track['external_urls']['spotify'])
+    for track in resulting_song['tracks']:
+        song_bin.append(track['id'])
 
-    result_c = choice(song_bin)
-    resulting_song_id = result_c.strip("https://open.spotify.com/track/")
-
-    return resulting_song_id
+    return song_bin
 
 def low_energy_low_mood(e, m):
     """Runs qualified entries and pushes the target metrics to Spotifys 
@@ -64,21 +77,18 @@ def low_energy_low_mood(e, m):
     target_acousticness = (m * .1) + .5 
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    results = spotify_credentials.recommendations(seed_genres=['pop'], 
+    resulting_song = spotify_credentials.recommendations(seed_genres=['pop'], 
                                     target_energy=target_energy, 
                                     target_loudness=target_loudness, 
                                     target_acousticness=target_acousticness, 
-                                    target_tempo=target_tempo)
-    #creating empty list for the 20(?) songs Spotify will return as recommendations. 
-    #Could eventually limit the result to 1, but for now choosing random.
+                                    target_tempo=target_tempo,
+                                    limit=1)
+    
     song_bin = []                                        
-    for track in results['tracks']:
-        song_bin.append(track['external_urls']['spotify'])
+    for track in resulting_song['tracks']:
+        song_bin.append(track['id'])
 
-    result_c = choice(song_bin)
-    resulting_song_id = result_c.strip("https://open.spotify.com/track/")
-
-    return resulting_song_id
+    return song_bin
 
 def high_energy_low_mood(e, m):
     """Runs qualified entries and pushes the target metrics to Spotifys 
@@ -90,21 +100,22 @@ def high_energy_low_mood(e, m):
     target_acousticness = (m * .1) + .5 
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    results = spotify_credentials.recommendations(seed_genres=['pop'], 
+    resulting_song = spotify_credentials.recommendations(seed_genres=['pop'], 
                                     target_energy=target_energy, 
                                     target_danceabiliity=target_danceabiliity, 
                                     target_acousticness=target_acousticness, 
-                                    target_tempo=target_tempo)
-    #creating empty list for the 20(?) songs Spotify will return as recommendations. 
-    #Could eventually limit the result to 1, but for now choosing random.
-    song_bin = []                                        
-    for track in results['tracks']:
-        song_bin.append(track['external_urls']['spotify'])
+                                    target_tempo=target_tempo,
+                                    limit=1)
 
-    result_c = choice(song_bin)
-    resulting_song_id = result_c.strip("https://open.spotify.com/track/")
+    song_bin = []                                     
+    for track in resulting_song['tracks']:
+        song_key = track['id']
+    song_bin.append(song_key)
+    song_bin.append(spotify_credentials.track(track_id=song_key)["album"]["images"][0])
+    song_bin.append(spotify_credentials.track(track_id=song_key)["preview_url"])
 
-    return resulting_song_id
+
+    return song_bin
 
 #choose which function to run based on inputs
 def get_recipe(energy, mood):

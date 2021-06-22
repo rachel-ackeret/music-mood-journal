@@ -7,8 +7,11 @@ from random import choice
 from spotipy.oauth2 import SpotifyClientCredentials
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 
-from model import connect_to_db, User, Entry, db
+from model import connect_to_db, User, Entry, db, WeatherDetails, SongDetails
 import crud
+
+# Weather API
+WEATHER_KEY = os.environ['WEATHER_API_KEY']
 
 # Flask setup
 app = Flask(__name__)
@@ -122,16 +125,35 @@ def save_journal():
     body = request.form.get("journal_entry")
     energy_ranking = int(request.form.get("energy"))
     mood_ranking = int(request.form.get("happiness"))
-    spotify_song_id = crud.get_recipe(energy_ranking, mood_ranking)
+    zipcode = request.form.get("zipcode")
 
+    spotify_song_id = crud.get_recipe(energy_ranking, mood_ranking)
+    temperature, clouds, weather_id, weather_description, weather_icon = crud.return_weather_data(zipcode)
+
+    print(spotify_song_id)
     #create database entry with object Entry
     entry = Entry(body=body, 
                 # user_id=user_id,
-                spotify_song_id=spotify_song_id, 
+                spotify_song_id=spotify_song_id,
                 energy_ranking=energy_ranking, 
                 mood_ranking = mood_ranking)
     current_user.entries.append(entry)
 
+    weather = WeatherDetails(temperature=temperature,
+                                clouds=clouds,
+                                weather_id=weather_id,
+                                weather_description=weather_description,
+                                weather_icon=weather_icon,
+                                zip_code=zipcode)
+    entry.weather_details.append(weather)
+
+    # song = SongDetails(song_image=song_image,
+    #                     song_preview=song_preview)
+    # entry.song_details.append(song)
+    
+    
+    db.session.add(weather)
+    # db.session.add(song_details)
     db.session.add(entry)
     db.session.commit()
 
@@ -238,16 +260,6 @@ def get_latest_entries():
         
     return jsonify(entries_as_json)
 
-
-@app.route("/chart-response/")
-def get_chart_response():
-    chart_response = {}
-    chart_respone[month_view] = request.form.get("month")
-    chart_respone[week_view] = request.form.get("week")
-    chart_respone[add_five] = request.form.get("addFive")
-    chart_respone[subtract_five] = request.form.get("minusFive")
-    
-    return chart_response
 
 #TEST DATA 
 
