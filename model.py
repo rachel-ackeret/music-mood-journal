@@ -50,7 +50,7 @@ class Entry(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     energy_ranking = db.Column(db.Float, nullable=False)
     mood_ranking = db.Column(db.Float, nullable=False)
-
+    
     def __repr__(self):
         return f"<Entry id={self.id} created_at={self.created_at} spotify_song_id={self.spotify_song_id} user_id={self.user_id}>"
 

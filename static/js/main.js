@@ -36,7 +36,7 @@ function getStartEndDateWeek() {
   return [ startDate, endDate ];
 }
 
-let dateRange = [];
+const dateRange = [];
 let moodRating = [];
 let energyRating = [];
 const [startDate, endDate] = getStartEndDateWeek();
@@ -290,12 +290,5 @@ let myChart = new Chart(
       changeView('week');
     });
 
-// for (entry of getStartEndDateWeek()) {
-//   dateRange.push(entry.created_at);
-//   moodRating.push(entry.mood_ranking);
-//   energyRating.push(entry.energy_ranking);
-// };
-
-  //CHART.JS CONFIG 
 
   

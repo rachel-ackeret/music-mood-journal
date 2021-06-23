@@ -1,5 +1,6 @@
 
 
+{% if current_user.is_authenticated %}
 {% extends 'base.html' %}
 {% block body %}
 <div class="grid ">
@@ -31,3 +32,4 @@
 <script src="../static/js/test.jsx" type="text/babel"></script>
 {% endblock %} 
 {% endblock %}
+{% endif %}

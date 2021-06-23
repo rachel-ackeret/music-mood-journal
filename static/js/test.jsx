@@ -27,10 +27,8 @@ function JournalEntry(props) {
   }
 // define TradingCardContainer component
 function GenerateJournalEntries() {
-  console.log('in function')
   //create empty list called paragraphs
   const journalEntriesProps = [];
-  console.log(allEntries);
     for (let entry of allEntries) {
       journalEntriesProps.push(
         <JournalEntry

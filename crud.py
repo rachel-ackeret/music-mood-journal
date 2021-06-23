@@ -111,7 +111,7 @@ def high_energy_low_mood(e, m):
     for track in resulting_song['tracks']:
         song_key = track['id']
     song_bin.append(song_key)
-    song_bin.append(spotify_credentials.track(track_id=song_key)["album"]["images"][0])
+    song_bin.append(spotify_credentials.track(track_id=song_key)["album"]["images"][0]["url"])
     song_bin.append(spotify_credentials.track(track_id=song_key)["preview_url"])
 
 

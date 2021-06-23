@@ -127,10 +127,12 @@ def save_journal():
     mood_ranking = int(request.form.get("happiness"))
     zipcode = request.form.get("zipcode")
 
-    spotify_song_id = crud.get_recipe(energy_ranking, mood_ranking)
+    spotify_song_id, song_image, song_preview = crud.get_recipe(energy_ranking, mood_ranking)
     temperature, clouds, weather_id, weather_description, weather_icon = crud.return_weather_data(zipcode)
 
     print(spotify_song_id)
+    print(song_image)
+    print(song_preview)
     #create database entry with object Entry
     entry = Entry(body=body, 
                 # user_id=user_id,
@@ -147,9 +149,9 @@ def save_journal():
                                 zip_code=zipcode)
     entry.weather_details.append(weather)
 
-    # song = SongDetails(song_image=song_image,
-    #                     song_preview=song_preview)
-    # entry.song_details.append(song)
+    song = SongDetails(song_image=song_image,
+                        song_preview=song_preview)
+    entry.song_details.append(song)
     
     
     db.session.add(weather)
@@ -208,7 +210,7 @@ def edit_entry(entry_id):
     
     db.session.add(journal_entry)
     db.session.commit()
-
+    
     return {
         "id": journal_entry.id,
         "body": journal_entry.body,
@@ -235,20 +237,34 @@ def fetch_entry(entry_id):
 
 
 @app.route("/api/entries/")
+@login_required
 def get_latest_entries():
     #custom_limit = int(request.args.get("limit", 10))
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
     
+    current_user_id = current_user.id
+
     entries_query = Entry.query
     if start_date and end_date:
         entries_query = entries_query.filter(Entry.created_at.between(start_date, end_date))
 
-    journal_entries = entries_query.all()
-
+    journal_entries = entries_query.filter(Entry.user_id==current_user_id).all()
     entries_as_json = []
     for journal_entry in journal_entries:
-        entries_as_json.append({
+        if WeatherDetails.entry_id == journal_entry.id:
+            print('yes')
+            entries_as_json.append({
+                "id": journal_entry.id,
+                "body": journal_entry.body,
+                "created_at": journal_entry.created_at,
+                "spotify_song_id": journal_entry.spotify_song_id,
+                "user_id": journal_entry.user_id,
+                "energy_ranking": journal_entry.energy_ranking,
+                "mood_ranking": journal_entry.mood_ranking,
+                "weather_description": journal_entry.weather_details.weather_description})
+        else:
+            entries_as_json.append({
             "id": journal_entry.id,
             "body": journal_entry.body,
             "created_at": journal_entry.created_at,
