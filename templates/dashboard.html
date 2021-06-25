@@ -5,23 +5,25 @@
 
 </div>
 <div class="grid">
-    <h2 class="text-center py-3">Your Mood + Energy</h1>
-    <div class="container-sm center-block d-flex">
-        <div class="col-1 d-flex align-items-center justify-content-end">
-            <!-- <button id="">Previous</button> -->
-            <i id="previous-view" class="bi bi-chevron-compact-left"></i>
-        </div>
-        <div class="col-10">
-            <div class="center-block">
-                <canvas id="myChart"></canvas>
-                <button id="month-view">Month</button>
-                <button id="week-view">Week</button>
+    <div class="bg-light shadow container-sm py-4">
+        <h2 class="text-center py-3">Your Mood + Energy</h1>
+        <div class="center-block d-flex justify-content-center ">
+            <div class="col-1 d-flex align-items-center justify-content-end">
+                <!-- <button id="">Previous</button> -->
+                <i id="previous-view" class="bi bi-chevron-compact-left"></i>
             </div>
-        </div>
-        <div class="col-1 d-flex align-items-center justify-content-start">
-            <!-- <button id="next-view">Next</button> -->
-            <i id="next-view" class="bi bi-chevron-compact-right"></i>
-        </div>
+            <div class="col-10 text-align-center">
+                <canvas class="my-5" id="myChart"></canvas>
+                <div class="d-flex justify-content-center my-4">
+                    <button class="btn btn-secondary mx-3 px-4" id="month-view">Month</button>
+                    <button class="btn btn-secondary mx-3 px-4" id="week-view">Week</button>
+                </div>
+            </div>
+            <div class="col-1 d-flex align-items-center justify-content-start">
+                <!-- <button id="next-view">Next</button> -->
+                <i id="next-view" class="bi bi-chevron-compact-right"></i>
+            </div>
+            </div>
         </div>
     </div>
 </div>

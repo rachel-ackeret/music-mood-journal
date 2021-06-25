@@ -92,8 +92,8 @@ function getStartEndDateWeek() {
       } else if (testingDateRange[i] >= moment().format('MM-DD-YYYY')) {
         break;
       } else {
-        moodData.push(0);
-        energyData.push(0);
+        moodData.push(null);
+        energyData.push(null);
       }
     }    
     return [dateLabels, moodData, energyData];
@@ -188,11 +188,13 @@ function getStartEndDateWeek() {
         labels: dateLabels,
         datasets: [{
             label: 'Your Mood',
+            spanGaps: true,
             backgroundColor: 'rgb(45, 122, 255)',
             borderColor: 'rgb(45, 122, 255)',
             data: moodData,
           },{
             label: 'Your Energy',
+            spanGaps: true,
             backgroundColor: 'rgb(0, 255, 119)',
             borderColor: 'rgb(0, 255, 119)',
             data: energyData,
@@ -201,17 +203,12 @@ function getStartEndDateWeek() {
     options: {
       responsive: true,
       scales: {
-        x: [{
-          display: false,
-        }],
-        y: [{
-          display: false,
+        yAxis: [{
+          display: true,
           ticks: {
-            beginAtZero: true,
-            //can't figure out how to get the chart 10 points high!
-            //Also want to add in x for any time entry is 0
-            suggestedMin: 1,
-            suggestedMax: 10,
+            min: 1,
+            max: 10,
+            stepSize: 1
           },
         }]
       },
