@@ -64,7 +64,7 @@ class WeatherDetails(db.Model):
                    primary_key=True,
                        autoincrement=True,
     )
-    temperature = db.Column(db.Float, nullable=False)
+    temperature = db.Column(db.Integer, nullable=False)
     clouds = db.Column(db.Float, nullable=False)
     weather_description = db.Column(db.String, nullable=False)
     weather_id = db.Column(db.Integer, nullable=False)
@@ -72,8 +72,7 @@ class WeatherDetails(db.Model):
     zip_code = db.Column(db.String, nullable=False)
     entry_id = db.Column(db.Integer, db.ForeignKey(Entry.id))
    
-    entry = db.relationship('Entry', backref='weather_details')
-
+    entry = db.relationship('Entry', backref=db.backref('weather_details', uselist=False))
 
 class SongDetails(db.Model):
     """SongDetails."""
@@ -88,7 +87,7 @@ class SongDetails(db.Model):
     song_preview = db.Column(db.String, nullable=True)
     entry_id = db.Column(db.Integer, db.ForeignKey(Entry.id))
    
-    entry = db.relationship('Entry', backref='song_details')
+    entry = db.relationship('Entry', backref=db.backref('song_details', uselist=False))
 
 
 #Connect to the database
@@ -104,5 +103,5 @@ def connect_to_db(flask_app, db_uri="postgresql:///database", echo=True):
 
 if __name__ == "__main__":
     from server import app
-    #connect_to_db(app) 
+    connect_to_db(app) 
     #may or may not need this. 

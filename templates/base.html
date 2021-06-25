@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Mood Journal</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
         <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
         <link href="../static/style.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
@@ -14,16 +15,12 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
-        
-        
     </head>
 
     <body>
-        <ul>
             {% for message in get_flashed_messages() %}
-              <li>{{ message }}</li>
+              <div style="padding:3rem;"><p><strong>{{ message }}</strong></p></div>
             {% endfor %}
-          </ul>
           {% block body %}
           BODY OF PAGE GOES HERE VIA INHERITANCE
           {% endblock %}
@@ -35,8 +32,8 @@
 
           <!--<script src="../static/js/app.js" type="text/babel"></script>-->
           
-          
           {% block js %}
+          PAGE SPECIFIC SCRIPTS
           {% endblock %}
     </body>
 </html> 

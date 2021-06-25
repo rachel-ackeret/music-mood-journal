@@ -1,7 +1,73 @@
 
 
-
 #editor-container.ql-container {
     height: 14rem;
     margin-bottom: 2rem;
+}
+.margin-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+.spotify-custom-setup img {
+    max-width:250px;
+    border-radius: 18%;
+}
+.spotify-custom-setup audio {
+    max-width: 250px;
+}
+img {
+    object-fit: contain;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+.song-title {
+    color: white;
+    text-transform: uppercase;
+}
+.song-artist {
+    color: white;
+}
+.weather-section {
+    background-color: #def2f1;
+    
+}
+
+/* THEME COLORS */
+
+.background-dark-1 {
+    background-color: #000000;
+}
+.background-dark-2 {
+    background-color: #0000b9;
+}
+.background-light-1 {
+    background-color:#BBE1FA;
+}
+
+@media only screen and (min-width: 550px) {
+    /* * {
+        transition: all .25s ease-out;
+    } */
+    .top-grid {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        /* background-color: #2b7a78; */
+    }
+    .top-card {
+        overflow: auto;
+        max-height: 75vh;
+    }
+    i.bi {
+        font-size: 5rem;
+        color: #969696;
+        cursor: pointer;
+    }
+    .close-button {
+        position: absolute;
+        top:0;
+        right: 0;
+    }
 }

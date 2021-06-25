@@ -6,7 +6,7 @@ import spotipy
 from random import choice
 from spotipy.oauth2 import SpotifyClientCredentials
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
-
+from sqlalchemy import desc
 from model import connect_to_db, User, Entry, db, WeatherDetails, SongDetails
 import crud
 
@@ -114,7 +114,7 @@ def register():
 
 @app.route("/journal")
 @login_required
-def dashboard():
+def create_journal_entry():
     return render_template("journal.html")
 
 
@@ -127,48 +127,53 @@ def save_journal():
     mood_ranking = int(request.form.get("happiness"))
     zipcode = request.form.get("zipcode")
 
-    spotify_song_id, song_image, song_preview = crud.get_recipe(energy_ranking, mood_ranking)
-    temperature, clouds, weather_id, weather_description, weather_icon = crud.return_weather_data(zipcode)
+    spotify_song_id, song_image, song_preview = crud.get_recipe(energy_ranking, mood_ranking, spotify_credentials)
+    temperature, clouds, weather_id, weather_description, weather_icon = crud.return_weather_data(zipcode, WEATHER_KEY)
 
     print(spotify_song_id)
     print(song_image)
     print(song_preview)
     #create database entry with object Entry
-    entry = Entry(body=body, 
-                # user_id=user_id,
-                spotify_song_id=spotify_song_id,
-                energy_ranking=energy_ranking, 
-                mood_ranking = mood_ranking)
-    current_user.entries.append(entry)
 
     weather = WeatherDetails(temperature=temperature,
-                                clouds=clouds,
-                                weather_id=weather_id,
-                                weather_description=weather_description,
-                                weather_icon=weather_icon,
-                                zip_code=zipcode)
-    entry.weather_details.append(weather)
+                            clouds=clouds,
+                            weather_id=weather_id,
+                            weather_description=weather_description,
+                            weather_icon=weather_icon,
+                            zip_code=zipcode)                  
 
     song = SongDetails(song_image=song_image,
                         song_preview=song_preview)
-    entry.song_details.append(song)
     
+    entry = Entry(body=body, 
+                spotify_song_id=spotify_song_id,
+                energy_ranking=energy_ranking, 
+                mood_ranking = mood_ranking,
+                weather_details = weather,
+                song_details = song)
     
+    current_user.entries.append(entry)
     db.session.add(weather)
-    # db.session.add(song_details)
+    db.session.add(song)
     db.session.add(entry)
     db.session.commit()
 
     flash("Created Entry Successfully!")
     print("Created Entry Successfully!")
 
-    return redirect("/journal")
+    return redirect("/dashboard")
 
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect("/")
     
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    return render_template("dashboard.html")
+
 
 @app.route("/api/entry-edit/<entry_id>", methods=["POST"])
 def edit_entry(entry_id):
@@ -206,7 +211,7 @@ def edit_entry(entry_id):
     
     #Refresh journal entry song if either mood or energy is updated
     if mood_ranking_updated or energy_ranking_updated:
-        journal_entry.spotify_song_id = crud.get_recipe(journal_entry.energy_ranking, journal_entry.mood_ranking)
+        journal_entry.spotify_song_id = crud.get_recipe(journal_entry.energy_ranking, journal_entry.mood_ranking, spotify_credentials)
     
     db.session.add(journal_entry)
     db.session.commit()
@@ -242,48 +247,71 @@ def get_latest_entries():
     #custom_limit = int(request.args.get("limit", 10))
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
-    
-    current_user_id = current_user.id
+    get_latest = request.args.get("get_latest")
 
     entries_query = Entry.query
     if start_date and end_date:
         entries_query = entries_query.filter(Entry.created_at.between(start_date, end_date))
 
-    journal_entries = entries_query.filter(Entry.user_id==current_user_id).all()
+    current_user_id = current_user.id
+
+    if get_latest:
+        print('get the latest!')
+        journal_entries = entries_query.filter(Entry.user_id==current_user_id).order_by(desc(Entry.created_at)).first()
+    else:
+        journal_entries = entries_query.filter(Entry.user_id==current_user_id).order_by(desc(Entry.created_at)).all()
+
     entries_as_json = []
+
     for journal_entry in journal_entries:
-        if WeatherDetails.entry_id == journal_entry.id:
-            print('yes')
-            entries_as_json.append({
-                "id": journal_entry.id,
-                "body": journal_entry.body,
-                "created_at": journal_entry.created_at,
-                "spotify_song_id": journal_entry.spotify_song_id,
-                "user_id": journal_entry.user_id,
-                "energy_ranking": journal_entry.energy_ranking,
-                "mood_ranking": journal_entry.mood_ranking,
-                "weather_description": journal_entry.weather_details.weather_description})
-        else:
-            entries_as_json.append({
+        print(journal_entry.weather_details)
+        entries_as_json.append({
             "id": journal_entry.id,
             "body": journal_entry.body,
             "created_at": journal_entry.created_at,
             "spotify_song_id": journal_entry.spotify_song_id,
             "user_id": journal_entry.user_id,
             "energy_ranking": journal_entry.energy_ranking,
-            "mood_ranking": journal_entry.mood_ranking
+            "mood_ranking": journal_entry.mood_ranking,
+            "weather_description": journal_entry.weather_details and journal_entry.weather_details.weather_description,
+            "temperature": journal_entry.weather_details and journal_entry.weather_details.temperature,
+            "weather_icon": journal_entry.weather_details and journal_entry.weather_details.weather_icon,
+            "song_image": journal_entry.song_details and journal_entry.song_details.song_image,
+            "song_preview": journal_entry.song_details and journal_entry.song_details.song_preview,
         })
-        
+
     return jsonify(entries_as_json)
 
 
-#TEST DATA 
-
-@app.route("/test-chart")
+@app.route("/api/entries/last/")
 @login_required
-def testchart():
-    return render_template("test-chart.html")
+def get_last_entry():
 
+    entries_query = Entry.query
+    current_user_id = current_user.id
+    
+    print('get the latest!')
+    journal_entry = entries_query.filter(Entry.user_id==current_user_id).order_by(desc(Entry.created_at)).first()
+   
+    entry_json = {
+        "id": journal_entry.id,
+        "body": journal_entry.body,
+        "created_at": journal_entry.created_at,
+        "spotify_song_id": journal_entry.spotify_song_id,
+        "user_id": journal_entry.user_id,
+        "energy_ranking": journal_entry.energy_ranking,
+        "mood_ranking": journal_entry.mood_ranking,
+        "weather_description": journal_entry.weather_details and journal_entry.weather_details.weather_description,
+        "temperature": journal_entry.weather_details and journal_entry.weather_details.temperature,
+        "weather_icon": journal_entry.weather_details and journal_entry.weather_details.weather_icon,
+        "song_image": journal_entry.song_details and journal_entry.song_details.song_image,
+        "song_preview": journal_entry.song_details and journal_entry.song_details.song_preview,
+    }
+
+    return jsonify(entry_json)
+
+
+#TEST DATA 
 
 
 if __name__ == "__main__":
