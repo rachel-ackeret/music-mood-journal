@@ -65,31 +65,27 @@ function LatestJournalEntry(props) {
                         <audio controls="controls" className="my-4" style={{display: props.song_preview === null ? 'none' : null }}>
                             <source src={props.song_preview} type="audio/mpeg" />
                         </audio>
-
-                        <a className="twitter-share-button"
-                            href="https://twitter.com/intent/tweet"
-                            data-size="large"
-                            data-text="custom share text"
-                            data-url="https://dev.twitter.com/web/tweet-button"
-                            data-hashtags="example,demo"
-                            data-via="twitterdev"
-                            data-related="twitterapi,twitter">
-                            Tweet
-                        </a>
+                        <br />
+                        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" 
+                        className="twitter-share-button" 
+                        data-size="large" data-text="Check out how I&#39;m feeling today. I&#39;m really vibing with this song :) " 
+                        data-url={`https://open.spotify.com/track/${props.spotify_song_id}`} 
+                        data-lang="en" 
+                        data-show-count="false">Tweet</a>
                     </div>            
                     <div className="col-lg-8">
                         <div className="p-2 weather-section col-lg-7 margin-center" style={{display: props.weather_description === null ? 'none' : null }}>
                             <div className="d-lg-flex align-items-center justify-content-center">
-                                <p className="text-align-center col-6">{props.temperature}&deg;</p>
-                                <img src={`http://openweathermap.org/img/wn/${props.weather_icon}@2x.png`} alt="{`${props.weather_description}`}"/>
+                                <p className="weather-text text-align-center col-6">{props.temperature}&deg;</p>
+                                <img className = "col-6" src={props.second_weather_icon} alt="{`${props.weather_description}`}"/>
                             </div>
-                            <p className="text-align-center">{props.weather_description}</p>
+                            <p className="weather-text text-align-center">{props.weather_description}</p>
                         </div>
                         <div className="p-3"></div>
                             <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick} id="form-edit" type="button" className="btn btn-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fillRule="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
-                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                                <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
                                 </svg>
                                 &nbsp;{editable ? 'Save' : 'Edit Entry'}
                             </button>
@@ -123,6 +119,7 @@ function TopJournalEntry() {
             mood_ranking={singleEntry.mood_ranking}
             weather_description={singleEntry.weather_description}
             weather_icon={singleEntry.weather_icon}
+            second_weather_icon={singleEntry.second_weather_icon}
             temperature={singleEntry.temperature}
             song_preview={singleEntry.song_preview}
             song_image={singleEntry.song_image}

@@ -69,6 +69,7 @@ class WeatherDetails(db.Model):
     weather_description = db.Column(db.String, nullable=False)
     weather_id = db.Column(db.Integer, nullable=False)
     weather_icon = db.Column(db.String, nullable=False)
+    second_weather_icon = db.Column(db.String, nullable=False)
     zip_code = db.Column(db.String, nullable=False)
     entry_id = db.Column(db.Integer, db.ForeignKey(Entry.id))
    

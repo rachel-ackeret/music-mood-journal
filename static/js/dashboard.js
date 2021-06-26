@@ -203,15 +203,13 @@ function getStartEndDateWeek() {
     options: {
       responsive: true,
       scales: {
-        yAxis: [{
+        yAxis: {
           display: true,
-          ticks: {
-            min: 1,
-            max: 10,
-            stepSize: 1
+          min: 1,
+          max: 10,
+          stepSize: 1
           },
-        }]
-      },
+        },
       elements: {
         line: {
           tension: 0.45

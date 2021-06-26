@@ -128,7 +128,7 @@ def save_journal():
     zipcode = request.form.get("zipcode")
 
     spotify_song_id, song_image, song_preview = crud.get_recipe(energy_ranking, mood_ranking, spotify_credentials)
-    temperature, clouds, weather_id, weather_description, weather_icon = crud.return_weather_data(zipcode, WEATHER_KEY)
+    temperature, clouds, weather_id, weather_description, weather_icon, second_weather_icon = crud.return_weather_data(zipcode, WEATHER_KEY)
 
     print(spotify_song_id)
     print(song_image)
@@ -140,6 +140,7 @@ def save_journal():
                             weather_id=weather_id,
                             weather_description=weather_description,
                             weather_icon=weather_icon,
+                            second_weather_icon=second_weather_icon,
                             zip_code=zipcode)                  
 
     song = SongDetails(song_image=song_image,
@@ -276,6 +277,7 @@ def get_latest_entries():
             "weather_description": journal_entry.weather_details and journal_entry.weather_details.weather_description,
             "temperature": journal_entry.weather_details and journal_entry.weather_details.temperature,
             "weather_icon": journal_entry.weather_details and journal_entry.weather_details.weather_icon,
+            "second_weather_icon": journal_entry.weather_details and journal_entry.weather_details.second_weather_icon,
             "song_image": journal_entry.song_details and journal_entry.song_details.song_image,
             "song_preview": journal_entry.song_details and journal_entry.song_details.song_preview,
         })
@@ -304,6 +306,7 @@ def get_last_entry():
         "weather_description": journal_entry.weather_details and journal_entry.weather_details.weather_description,
         "temperature": journal_entry.weather_details and journal_entry.weather_details.temperature,
         "weather_icon": journal_entry.weather_details and journal_entry.weather_details.weather_icon,
+        "second_weather_icon": journal_entry.weather_details and journal_entry.weather_details.second_weather_icon,
         "song_image": journal_entry.song_details and journal_entry.song_details.song_image,
         "song_preview": journal_entry.song_details and journal_entry.song_details.song_preview,
     }
