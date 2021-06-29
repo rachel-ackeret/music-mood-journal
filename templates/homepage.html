@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="grid">
-  <h1 class="text-center mb-5 pt-5 color-light">Begin Your Musical Mood Journal</h1>
+<div class="grid background-main">
+  <h1 class="text-center mb-5 pt-5">Begin Your Musical Mood Journal</h1>
     <div class="container-sm d-lg-flex pt-5 justify-content-around">
-      <div class="col-lg-5 mb-5 mb-5 p-4 rounded bg-light shadow login-module" style="border-top: 9px solid blue;">
+      <div class="background-element col-lg-5 mb-5 mb-5 p-4 rounded neu-shadow-1 login-module">
         <form class="form-signin" action ="/login" method="POST">
         
           <h2 class="form-signin-heading text-center mb-4">Sign In</h2>
@@ -27,14 +27,14 @@
           </div>
         
         <div class="display-block text-center">
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In
+          <button class="btn btn-lg neu-button-1 btn-block btn-blue" type="submit">Sign In
           </button>
         </div>
         </form>
       </div>
 
     <!-- REGISTER HERE-->
-    <div class="col-lg-5 mb-5 p-4 rounded bg-light shadow register-module" style="border-top: 9px solid green;">
+    <div class="background-element col-lg-5 mb-5 p-4 rounded neu-shadow-1 register-module">
       <form class="form-signin" action ="/register" method="POST">
       <h2 class="text-center mb-4">Create Account</h2>
       <div class="form-group">
@@ -71,7 +71,7 @@
               required>
       </div>
       <div class="display-block text-center">
-        <button class="btn btn-lg btn-success btn-block" type="submit">Register</button>
+        <button class="btn btn-lg neu-button-1 btn-block btn-green" type="submit">Register</button>
       </div>
       </form>
     </div>

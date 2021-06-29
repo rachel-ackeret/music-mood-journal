@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block body %}
 {% if current_user.is_authenticated %}
-<div class="grid bg-light">
+<div class="grid background-main">
   <div class="container">
     <h1 class="p-4 text-center">{{current_user.fname}}, welcome to your journal!</h1>
     <a href="/logout"><u>Log Out</u></a>
-      <div class="card bg-white shadow rounded my-3">
-        <div class="card-body">
+    <div class=" d-flex justify-content-center">
+      <div class="journal-create-module background-element neu-shadow-1 my-3">
           <h2>Create Your Journal Entry Today</h2>
           <form action ="/journal-saved" method="POST">
               <p>How are you feeling today?</p>
@@ -23,8 +23,8 @@
               <br>
               <input type="submit" value="Submit">
           </form>
-        </div>
       </div>
+    </div>
     </div>
     </div>
   {% endif %}

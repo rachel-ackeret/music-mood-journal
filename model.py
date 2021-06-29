@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
     )
 
     def __repr__(self):
-        return f"<User user_id={self.user_id} username={self.username} first_name={self.first_name} last_name={self.last_name}>"
+        return f"<User user_id={self.user_id} username={self.username} first_name={self.first_name} >"
     
 
     def get_id(self):
