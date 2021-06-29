@@ -46,7 +46,7 @@ def return_weather_data(zipcode, weather_key):
     #api.openweathermap.org/data/2.5/weather?zip={zip code}&appid={API key}
 
     query = 'https://api.openweathermap.org/data/2.5/weather'
-    zipcode_string = '?zip=' + zipcode
+    zipcode_string = '?zip=' + str(zipcode)
     apikey_string = ',us&appid=' + weather_key
     resulting_weather = query + zipcode_string + apikey_string + '&units=imperial'
     
@@ -61,7 +61,7 @@ def return_weather_data(zipcode, weather_key):
     second_weather_icon = match_icon(weather_id)
     return [temperature, clouds, weather_id, weather_description, weather_icon, second_weather_icon]
 
-def high_energy_high_mood(e, m, spotify_credentials):
+def high_energy_high_mood(genres, e, m, spotify_credentials):
     """Runs qualified entries and pushes the target metrics to Spotifys 
     recommendation API request. Returns single song track ID."""
     #based on energy ranking
@@ -71,7 +71,7 @@ def high_energy_high_mood(e, m, spotify_credentials):
     mode = 1
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    resulting_songs = spotify_credentials.recommendations(seed_genres=['pop'], 
+    resulting_songs = spotify_credentials.recommendations(seed_genres=genres, 
                                     target_danceabiliity=target_danceabiliity, 
                                     target_energy=target_energy, 
                                     mode=mode, 
@@ -81,7 +81,7 @@ def high_energy_high_mood(e, m, spotify_credentials):
     return resulting_songs
     
 
-def low_energy_high_mood(e, m, spotify_credentials):
+def low_energy_high_mood(genres, e, m, spotify_credentials):
     """Runs qualified entries and pushes the target metrics to Spotifys 
     recommendation API request. Returns single song track ID."""
     #based on ENERGY ranking
@@ -91,7 +91,7 @@ def low_energy_high_mood(e, m, spotify_credentials):
     mode = 1
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    resulting_songs = spotify_credentials.recommendations(seed_genres=['pop'], 
+    resulting_songs = spotify_credentials.recommendations(seed_genres=genres, 
                                     target_energy=target_energy, 
                                     target_loudness=target_loudness, 
                                     mode=mode, 
@@ -100,7 +100,7 @@ def low_energy_high_mood(e, m, spotify_credentials):
 
     return resulting_songs
 
-def low_energy_low_mood(e, m, spotify_credentials):
+def low_energy_low_mood(genres, e, m, spotify_credentials):
     """Runs qualified entries and pushes the target metrics to Spotifys 
     recommendation API request. Returns single song track ID."""
     #based on ENERGY ranking
@@ -110,7 +110,7 @@ def low_energy_low_mood(e, m, spotify_credentials):
     target_acousticness = (m * .1) + .5 
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    resulting_songs = spotify_credentials.recommendations(seed_genres=['pop'], 
+    resulting_songs = spotify_credentials.recommendations(seed_genres=genres, 
                                     target_energy=target_energy, 
                                     target_loudness=target_loudness, 
                                     target_acousticness=target_acousticness, 
@@ -119,7 +119,7 @@ def low_energy_low_mood(e, m, spotify_credentials):
 
     return resulting_songs
     
-def high_energy_low_mood(e, m, spotify_credentials):
+def high_energy_low_mood(genres, e, m, spotify_credentials):
     """Runs qualified entries and pushes the target metrics to Spotifys 
     recommendation API request. Returns single song track ID."""
     #based on ENERGY ranking
@@ -129,7 +129,7 @@ def high_energy_low_mood(e, m, spotify_credentials):
     target_acousticness = (m * .1) + .5 
     #this is based on an assumption of the happiest song having 165 BPM (could change assumption)
     target_tempo = m * 16.5
-    resulting_songs = spotify_credentials.recommendations(seed_genres=['pop'], 
+    resulting_songs = spotify_credentials.recommendations(seed_genres=genres, 
                                     target_energy=target_energy, 
                                     target_danceabiliity=target_danceabiliity, 
                                     target_acousticness=target_acousticness, 
@@ -139,16 +139,16 @@ def high_energy_low_mood(e, m, spotify_credentials):
     return resulting_songs
 
 #choose which function to run based on inputs
-def get_recipe(energy, mood, spotify_credentials):
+def get_recipe(genres, energy, mood, spotify_credentials):
     """direct user inputs to the correct music producing function based on their rankings"""
     if (energy >= 5) and (mood >= 5):
-        resulting_songs = high_energy_high_mood(energy, mood, spotify_credentials)
+        resulting_songs = high_energy_high_mood(genres, energy, mood, spotify_credentials)
     elif (energy < 5) and (mood >= 5):
-        resulting_songs = low_energy_high_mood(energy, mood, spotify_credentials)
+        resulting_songs = low_energy_high_mood(genres, energy, mood, spotify_credentials)
     elif (energy < 5) and (mood < 5):
-        resulting_songs = low_energy_low_mood(energy, mood, spotify_credentials)
+        resulting_songs = low_energy_low_mood(genres, energy, mood, spotify_credentials)
     elif (energy >= 5) and (mood < 5):
-        resulting_songs = high_energy_low_mood(energy, mood, spotify_credentials)
+        resulting_songs = high_energy_low_mood(genres, energy, mood, spotify_credentials)
     else:
         print('Oops, nothing happened')
 
@@ -160,20 +160,23 @@ def get_song_info(the_resulting_songs, spotify_credentials):
     song_info = []
 
     for track in the_resulting_songs['tracks']:
-        song_bin.append(track['id'])
+        song_bin.append(track)
     
     is_preview_empty = True
 
     while is_preview_empty:
         song_key = choice(song_bin)
-        preview_test = spotify_credentials.track(track_id=song_key)["preview_url"]
+        preview_test = song_key["preview_url"]
         if preview_test is not None:
             is_preview_empty = False
             print(is_preview_empty)
 
-    song_info.append(song_key)
-    song_info.append(spotify_credentials.track(track_id=song_key)["album"]["images"][0]["url"])
-    song_info.append(spotify_credentials.track(track_id=song_key)["preview_url"])
+    print(song_key)
+    song_info.append(song_key["id"])
+    song_info.append(song_key["album"]["images"][0]["url"])
+    song_info.append(song_key["preview_url"])
+    song_info.append(song_key["artists"][0]["name"])
+    song_info.append(song_key["name"])
 
     print(song_info)
 

@@ -1,10 +1,8 @@
 {% if current_user.is_authenticated %}
 {% extends 'base.html' %}
 {% block body %}
-<div class="grid top-grid text-center" id="latest-post">
-
-</div>
 <div class="grid">
+    <div id="latest-post" class="text-center d-flex justify-content-center"></div>
     <div class="bg-light shadow container-sm py-4">
         <h2 class="text-center py-3">Your Mood + Energy</h1>
         <div class="center-block d-flex justify-content-center ">
@@ -26,8 +24,7 @@
             </div>
         </div>
     </div>
-</div>
-<div class="grid ">
+
     <div id="test-journal-entries" class="container-sm d-flex flex-column">
 
     </div>

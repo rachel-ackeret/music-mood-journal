@@ -22,7 +22,7 @@ function getStartEndDateWeek() {
     //BASE CONFIG
   
   $.get(
-    '/api/entries',
+    '/api/entries/',
     {
       start_date: startDate.toISOString(),
       end_date: endDate.toISOString()
@@ -237,7 +237,7 @@ function JournalEntry(props) {
                 </audio>
                 <div style={{display: props.weather_description === null ? 'none' : null }}>
                 <p>{props.temperature} &deg;</p>
-                <img src={`http://openweathermap.org/img/wn/${props.weather_icon}@2x.png`} alt="{`${props.weather_description}`}"/>
+                <img className ="col-3" src={props.second_weather_icon} alt="{`${props.weather_description}`}"/>
                 
                 </div>
             </div>
@@ -261,9 +261,12 @@ function GenerateJournalEntries() {
           mood_ranking={entry.mood_ranking}
           weather_description={entry.weather_description}
           weather_icon={entry.weather_icon}
+          second_weather_icon={entry.second_weather_icon}
           temperature={entry.temperature}
           song_preview={entry.song_preview}
           song_image={entry.song_image}
+          song_artist={entry.song_artist}
+          song_name={entry.song_name}
         />
       );
     }

@@ -16,7 +16,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(15), nullable=False)
     fname = db.Column(db.String(15), nullable=True)
-    lname = db.Column(db.String(15), nullable=True)
+    zipcode = db.Column(db.Integer, nullable=True)
+    genre_choice = db.Column(db.String, nullable=True)
     
     entries = db.relationship(
         "Entry",
@@ -86,6 +87,8 @@ class SongDetails(db.Model):
     )
     song_image = db.Column(db.String, nullable=True)
     song_preview = db.Column(db.String, nullable=True)
+    song_artist = db.Column(db.String, nullable=True)
+    song_name = db.Column(db.String, nullable=True)
     entry_id = db.Column(db.Integer, db.ForeignKey(Entry.id))
    
     entry = db.relationship('Entry', backref=db.backref('song_details', uselist=False))

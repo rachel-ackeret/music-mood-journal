@@ -20,33 +20,12 @@
               <input type="range" name="energy" min="1" max="10" value="5">
               <p>Rank your mood today from Low to High</p>
               <input type="range" name="happiness" min="1" max="10" value="5">
-              <p>Set your zipcode for weather features!</p>
-              <input id="zip" name="zipcode" type="text" pattern="[0-9]*">
               <br>
               <input type="submit" value="Submit">
           </form>
         </div>
       </div>
     </div>
-    <!--<div class="container d-flex flex-column">
-      {% for entry in current_user.entries %}
-        <div class="card bg-white shadow rounded my-3">
-          <div class="card-body">
-            
-            <h3>Entry on {{entry.created_at.month}}/{{entry.created_at.day}}/{{entry.created_at.year}}</h3>
-            <p>{{ entry.body|safe }}</p>
-            <div id="body-text"></div>
-            <iframe src="https://open.spotify.com/embed/track/{{entry.spotify_song_id}}" width="300" 
-            height="80" frameborder="0" allowtransparency="true" allow="encrypted-media">
-            </iframe>
-            <p>Mood: {{entry.mood_ranking}}</p>
-            <div id="mood-rating"></div>
-            <p>Energy: {{entry.energy_ranking}}</p>
-            <div id="energy-rating"></div>
-          </div>
-        </div>
-        {% endfor %}
-      </div> -->
     </div>
   {% endif %}
 

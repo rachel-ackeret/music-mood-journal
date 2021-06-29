@@ -1,16 +1,43 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<div class="grid">
+  <h1 class="text-center mb-5 pt-5 color-light">Begin Your Musical Mood Journal</h1>
+    <div class="container-sm d-lg-flex pt-5 justify-content-around">
+      <div class="col-lg-5 mb-5 mb-5 p-4 rounded bg-light shadow login-module" style="border-top: 9px solid blue;">
+        <form class="form-signin" action ="/login" method="POST">
+        
+          <h2 class="form-signin-heading text-center mb-4">Sign In</h2>
+        
+          <div class="form-group">
+            <input type="email"
+                  name="username"
+                  class="form-control input-lg"
+                  placeholder="Email Address"
+                  required
+                  autofocus>
+          </div>
+        
+          <div class="form-group">
+            <input type="password"
+                  name="password"
+                  class="form-control input-lg"
+                  placeholder="Password"
+                  required>
+          </div>
+        
+        <div class="display-block text-center">
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In
+          </button>
+        </div>
+        </form>
+      </div>
 
-  <div><h1>Hello World</h1></div>
-  <!-- LOGIN HERE-->
-  <div class="">
-  <form class="form-signin" action ="/login" method="POST">
-    
-      <h2 class="form-signin-heading">Please Sign In</h2>
-    
+    <!-- REGISTER HERE-->
+    <div class="col-lg-5 mb-5 p-4 rounded bg-light shadow register-module" style="border-top: 9px solid green;">
+      <form class="form-signin" action ="/register" method="POST">
+      <h2 class="text-center mb-4">Create Account</h2>
       <div class="form-group">
-        <label for="email-field" class="sr-only">Email Address</label>
         <input type="email"
               name="username"
               class="form-control input-lg"
@@ -20,62 +47,38 @@
       </div>
     
       <div class="form-group">
-        <label for="password-field" class="sr-only">Password</label>
         <input type="password"
               name="password"
               class="form-control input-lg"
               placeholder="Password"
               required>
       </div>
-    
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In
-      </button>
-    
-    </form>
-  </div>
 
-  <!-- REGISTER HERE-->
-  <div class="">
-    <form class="form-signin" action ="/register" method="POST">
-    <h2>Please Register</h2>
-    <div class="form-group">
-      <label for="email-field" class="sr-only">Email Address</label>
-      <input type="email"
-            name="username"
-            class="form-control input-lg"
-            placeholder="Email Address"
-            required
-            autofocus>
+      <div class="form-group">
+        <input type="fname"
+              name="fname"
+              class="form-control input-lg"
+              placeholder="First Name"
+              required>
+      </div>
+      <div class="form-group">
+        <input type="zipcode"
+              name="zipcode"
+              class="form-control input-lg"
+              type="text" p
+              attern="[0-9]*"
+              placeholder="Zip Code"
+              required>
+      </div>
+      <div class="display-block text-center">
+        <button class="btn btn-lg btn-success btn-block" type="submit">Register</button>
+      </div>
+      </form>
     </div>
-  
-    <div class="form-group">
-      <label for="password-field" class="sr-only">Password</label>
-      <input type="password"
-            name="password"
-            class="form-control input-lg"
-            placeholder="Password"
-            required>
-    </div>
-
-    <div class="form-group">
-      <label for="first-name" class="sr-only">first name</label>
-      <input type="fname"
-            name="fname"
-            class="form-control input-lg"
-            placeholder="first-name"
-            required>
-    </div>
-    <div class="form-group">
-      <label for="last-name" class="sr-only">last name</label>
-      <input type="lname"
-            name="lname"
-            class="form-control input-lg"
-            placeholder="last-name"
-            required>
-    </div>
-  
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Register
-    </button>
-    </form>
   </div>
+  </div>
+</div>
+{% block js %}
+  <script src="../static/js/homepage.js" type="text/babel"></script>
+{% endblock %}
 {% endblock %}

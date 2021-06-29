@@ -54,7 +54,7 @@ url = "https://api.spotify.com/v1/"
 @app.route("/")
 def homepage():
     """Show homepage."""
-    
+
     if current_user.is_authenticated:
         return redirect("/journal")
 
@@ -76,7 +76,9 @@ def login():
         # Call flask_login.login_user to login a user
         login_user(user)
 
-        flash("Logged in successfully!")
+        if not user.genre_choice:
+            return redirect("/genre")
+
         return redirect("/journal")
 
     print("sorry try again")
@@ -89,20 +91,18 @@ def register():
     username = request.form.get("username")
     password = request.form.get("password")
     fname = request.form.get("fname")
-    lname = request.form.get("lname")
+    zipcode = request.form.get("zipcode")
 
     if not User.query.filter_by(username=username).first():
         user = User(
             username=username,
             password=password,
             fname = fname,
-            lname = lname,
+            zipcode = zipcode,
         )
 
         db.session.add(user)
         db.session.commit()
-
-        flash("Created User Successfully!")
 
         return redirect("/")
 
@@ -111,6 +111,35 @@ def register():
     return redirect("/")
 
 #redirect them to the login for users not logged in
+
+@app.route("/genre")
+@login_required
+def genre_picker():
+
+    available_genres = spotify_credentials.recommendation_genre_seeds()
+    genres = available_genres["genres"]
+    print(genres)
+
+    return render_template("genre-picker.html" , genres=genres)
+
+
+@app.route("/save-genre", methods=["POST"])
+@login_required
+def save_genre():
+
+    genre_choice = request.form.getlist("genre-choice[]")
+    print(genre_choice)
+    print('hello???')
+    # user = User(
+    #     genre_choice=genre_choice
+    # )
+
+    current_user.genre_choice = genre_choice
+    db.session.commit()
+    
+    flash("Created User Successfully!")
+
+    return redirect("/")
 
 @app.route("/journal")
 @login_required
@@ -125,14 +154,14 @@ def save_journal():
     body = request.form.get("journal_entry")
     energy_ranking = int(request.form.get("energy"))
     mood_ranking = int(request.form.get("happiness"))
-    zipcode = request.form.get("zipcode")
+    zipcode = current_user.zipcode
+    genres = current_user.genre_choice
 
-    spotify_song_id, song_image, song_preview = crud.get_recipe(energy_ranking, mood_ranking, spotify_credentials)
+    spotify_song_id, song_image, song_preview, song_artist, song_name = crud.get_recipe(genres, energy_ranking, mood_ranking, spotify_credentials)
     temperature, clouds, weather_id, weather_description, weather_icon, second_weather_icon = crud.return_weather_data(zipcode, WEATHER_KEY)
 
-    print(spotify_song_id)
-    print(song_image)
-    print(song_preview)
+    print(song_artist)
+    print(song_name)
     #create database entry with object Entry
 
     weather = WeatherDetails(temperature=temperature,
@@ -144,7 +173,9 @@ def save_journal():
                             zip_code=zipcode)                  
 
     song = SongDetails(song_image=song_image,
-                        song_preview=song_preview)
+                        song_preview=song_preview,
+                        song_artist=song_artist,
+                        song_name=song_name)
     
     entry = Entry(body=body, 
                 spotify_song_id=spotify_song_id,
@@ -280,6 +311,8 @@ def get_latest_entries():
             "second_weather_icon": journal_entry.weather_details and journal_entry.weather_details.second_weather_icon,
             "song_image": journal_entry.song_details and journal_entry.song_details.song_image,
             "song_preview": journal_entry.song_details and journal_entry.song_details.song_preview,
+            "song_artist": journal_entry.song_details and journal_entry.song_details.song_artist,
+            "song_name": journal_entry.song_details and journal_entry.song_details.song_name,
         })
 
     return jsonify(entries_as_json)
@@ -309,6 +342,8 @@ def get_last_entry():
         "second_weather_icon": journal_entry.weather_details and journal_entry.weather_details.second_weather_icon,
         "song_image": journal_entry.song_details and journal_entry.song_details.song_image,
         "song_preview": journal_entry.song_details and journal_entry.song_details.song_preview,
+        "song_artist": journal_entry.song_details and journal_entry.song_details.song_artist,
+        "song_name": journal_entry.song_details and journal_entry.song_details.song_name,
     }
 
     return jsonify(entry_json)

@@ -1,5 +1,7 @@
 
-
+.background-gradient {
+    background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(21,27,97,1) 53%, rgba(27,23,107,1) 100%);
+}
 #editor-container.ql-container {
     height: 14rem;
     margin-bottom: 2rem;
@@ -7,6 +9,12 @@
 .margin-center {
     margin-left: auto;
     margin-right: auto;
+}
+.padding-left {
+    padding-left: 1rem;
+}
+.padding-right{
+    padding-right: 1rem;
 }
 .spotify-custom-setup img {
     max-width:250px;
@@ -22,19 +30,19 @@ img {
     max-width: 100%;
     max-height: 100%;
 }
-.song-title {
-    color: white;
+.song-title {   
     text-transform: uppercase;
 }
-.song-artist {
-    color: white;
-}
-.weather-section {
-    background-color: #def2f1;   
+.weather-section { 
+    /* border: 6px solid #7db5d6; */
+    border-radius: 50%;
 }
 .weather-text {
     text-transform: uppercase; 
-    font-size: 22px;
+    font-size: 17px;
+}
+.form-group {
+    margin-bottom: 1rem;
 }
 /* THEME COLORS */
 
@@ -47,20 +55,86 @@ img {
 .background-light-1 {
     background-color:#BBE1FA;
 }
+.color-light {
+    color: #ffffff;
+}
+/* Style the input field */
+#myInput {
+  padding: 10px;
+  margin-top: -6px;
+  border: 0;
+  border-radius: 0;
+  background: #f1f1f1;
+}
+.dropdown-menu>li {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+    box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+}
+.dropdown-menu.show {
+    top: 36px!important;
+    transform: none!important;;
+}
 
-@media only screen and (min-width: 550px) {
+.genre-picker {
+    padding: 15px;
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    -webkit-column-gap: 40px;
+    -moz-column-gap: 40px;
+    column-gap: 40px;
+    -webkit-column-rule: 1px solid lightgrey;
+    -moz-column-rule: 1px solid lightgrey;
+    column-rule: 1px solid lightgrey;
+}
+
+.genre-picker {
+    padding: 15px;
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+    -webkit-column-gap: 25px;
+    -moz-column-gap: 25px;
+    column-gap: 25px;
+    -webkit-column-rule: 1px solid lightgrey;
+    -moz-column-rule: 1px solid lightgrey;
+    column-rule: 1px solid lightgrey;
+}
+@media only screen and (min-width: 576px) {
     /* * {
         transition: all .25s ease-out;
     } */
     .top-grid {
-        height: 100vh;
         display: flex;
         justify-content: center;
         /* background-color: #2b7a78; */
-    }
-    .top-card {
-        overflow: auto;
-        max-height: 75vh;
     }
     i.bi {
         font-size: 5rem;
@@ -71,5 +145,48 @@ img {
         position: absolute;
         top:0;
         right: 0;
+    }
+    .genre-picker {
+        padding: 15px;
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+        -webkit-column-gap: 40px;
+        -moz-column-gap: 40px;
+        column-gap: 40px;
+        -webkit-column-rule: 1px solid lightgrey;
+        -moz-column-rule: 1px solid lightgrey;
+        column-rule: 1px solid lightgrey;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .genre-picker {
+        padding: 15px;
+        -webkit-column-count: 4;
+        -moz-column-count: 4;
+        column-count: 4;
+        -webkit-column-gap: 40px;
+        -moz-column-gap: 40px;
+        column-gap: 40px;
+        -webkit-column-rule: 1px solid lightgrey;
+        -moz-column-rule: 1px solid lightgrey;
+        column-rule: 1px solid lightgrey;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+
+    .genre-picker {
+        padding: 15px;
+        -webkit-column-count: 5;
+        -moz-column-count: 5;
+        column-count: 5;
+        -webkit-column-gap: 40px;
+        -moz-column-gap: 40px;
+        column-gap: 40px;
+        -webkit-column-rule: 1px solid lightgrey;
+        -moz-column-rule: 1px solid lightgrey;
+        column-rule: 1px solid lightgrey;
     }
 }
