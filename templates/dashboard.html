@@ -2,8 +2,8 @@
 {% extends 'base.html' %}
 {% block body %}
 <div class="grid">
-    <div id="latest-post" class="text-center d-flex justify-content-center"></div>
-    <div class="bg-light shadow container-sm py-4">
+    <div id="latest-post" class="text-center"></div>
+    <div class="shadow container-sm py-4">
         <h2 class="text-center py-3">Your Mood + Energy</h1>
         <div class="center-block d-flex justify-content-center ">
             <div class="col-1 d-flex align-items-center justify-content-end">
@@ -35,6 +35,7 @@
 {% block js %}
 <script src="../static/js/dashboard.js" type="text/babel"></script>
 <script src="../static/js/latest-post.jsx" type="text/babel"></script>
+<script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
 
 {% endblock %} 
 {% endif %}

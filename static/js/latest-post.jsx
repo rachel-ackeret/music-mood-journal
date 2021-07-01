@@ -1,97 +1,120 @@
 'use strict';
 
 let singleEntry = null;
+let quill_edit;
 
 $.get(
     '/api/entries/last/',
     {},
     (res) => {
       singleEntry = res;
-      console.log(singleEntry);
       renderReact();
     }
   );
-
+  
   //BODY TEXT 
 function LatestJournalEntry(props) {
-    const [bodyText, setBodyText] = React.useState(props.body);
     const [editable, setEditable] = React.useState(false);
+    const [energyRanking, setEnergyRanking] = React.useState(props.energy_ranking);
+    const [moodRanking, setMoodRanking] = React.useState(props.mood_ranking);
+    const [bodyText, setBodyText] = React.useState(props.body);
     
     // Toggle edit mode (ex.: if `editable` === true, set to false)
     const handleEditModeButtonClick = () => {
       setEditable(!editable);    
-      console.log('I am setting state to edit.')
+
+      quill_edit = new Quill('#edit-existing-entry', {
+        modules: {
+            toolbar: true
+          },
+          theme: 'snow'
+      });
     };
   
     const handleSaveModeButtonClick = () => {
+      $('.ql-toolbar').remove();
       setEditable(!editable);
+
+      //QUILL SAVE
       var journalEntry = document.querySelector('input[name=journal_entry_edit]');
       journalEntry.value = quill_edit.root.innerHTML;
-      console.log(journalEntry.value)
-      let newValue = journalEntry.value
-      console.log('I am setting state to saved.')
-  
+      setBodyText(journalEntry.value)
+
       // Make post request to update rating in DB
-      $.post(`/api/entry-edit/${props.entryId}`, {journal_entry_edit: newValue}, (res) => {
-        console.log(res);
-        console.log('saving update to database through flask')
+      $.post(`/api/entry-edit/${props.entryId}`, {mood_edit: moodRanking}, {energy_edit: energyRanking}, {journal_entry_edit: bodyText}, (res) => {
+        console.log(res)
+        setMoodRanking(props.mood_ranking);
+        setEnergyRanking(props.energy_ranking);
         setBodyText(res.body);
       });
     };
+    const handleEnergyChange = (e) => {
+      editable ? setEnergyRanking(e.target.value) : setEnergyRanking(energyRanking);
+    };
+
+    const handleMoodChange = (e) => {
+      editable ? setMoodRanking(e.target.value) : setMoodRanking(moodRanking);
+    };
     return (
         <React.Fragment> 
-            <div className="shadow my-3 p-4 rounded top-card position-relative col-lg-9 align-self-center bg-white">
-                <h3>Your latest entry on {props.created_at}</h3>
-                <div className="mt-5 d-flex">
-                    <div className="spotify-custom-setup p-1 margin-center d-flex flex-column align-items-center col-8">
+          <div className="justify-content-center top-card container-sm position-relative p-5">
+                <h3 className="pt-5">Your latest entry on {props.created_at}</h3>
+                <div className="pt-5 col-8 justify-content-end d-flex margin-center">
+                  <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick} className="edit-button btn neu-button-2">
+                      {editable ? 'Save' : 'Edit'}<img src="./static/icons/edit.png" />
+                  </button>
+                </div>
+                <div className="my-3 d-flex justify-content-center">
+                    <div className="card-module spotify-custom-setup p-4 d-flex flex-column align-items-center col-5 mx-4 position-relative">
+                        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" 
+                        className="twitter-share-button" 
+                        data-size="large" 
+                        data-text="Check out how I&#39;m feeling today. I&#39;m really vibing with this song!" 
+                        data-url={`https://open.spotify.com/track/${props.spotify_song_id}`} 
+                        data-lang="en" 
+                        data-show-count="false">Tweet</a>
+                        <br />
                         <h4 className="song-title">{props.song_name}</h4>
-                        <h5 className="song-artist">{props.song_artist}</h5>
+                        <p className="small song-artist">{props.song_artist}</p>
                         <a href={`https://open.spotify.com/track/${props.spotify_song_id}`} target="_blank">
                         <img src={props.song_image} className="shadow"/>
                         </a>
                         <audio controls="controls" className="my-4" style={{display: props.song_preview === null ? 'none' : null }}>
                             <source src={props.song_preview} type="audio/mpeg" />
                         </audio>
-                    </div>
-                    <div className="col-4">
-                      <p>Your mood: {props.mood_ranking}</p>
-                          <p>Your energy: {props.energy_ranking}</p>
-                          <br />
-                        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" 
-                        className="twitter-share-button" 
-                        data-size="large" data-text="Check out how I&#39;m feeling today. I&#39;m really vibing with this song!" 
-                        data-url={`https://open.spotify.com/track/${props.spotify_song_id}`} 
-                        data-lang="en" 
-                        data-show-count="false">Tweet</a>
-                    </div>    
-                  </div>        
-                    <div className="p-3">
-                      <p>This is what you're feeling:</p>
-                      <div dangerouslySetInnerHTML={{ __html: props.body }}></div>
-                        <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick} id="form-edit" type="button" className="btn btn-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fillRule="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
-                            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
-                            </svg>
-                            &nbsp;{editable ? 'Save' : 'Edit Entry'}
-                        </button>
                       </div>
-                      <div className="py-4 weather-section col-lg-6 margin-center" style={{display: props.weather_description === null ? 'none' : null }}>
-                        <div className="d-lg-flex align-items-center justify-content-center">
-                          <p className="weather-text text-center">{props.weather_description} | {props.temperature}&deg;</p>
-                        </div>
-                        <img className = "col-4" src={props.second_weather_icon} alt="{`${props.weather_description}`}"/>
-                      </div>  
-                      <div style={{display: editable ? null : 'none' }}>
-                        <div className="the-quill-editor">
-                          <input name="journal_entry_edit" type="hidden"/>    
-                          <div id="edit-existing-entry"></div>
-                        </div>
+                    <div className="card-module col-3 mx-4 p-4">
+                    <div className="p-3 mb-3 weather-section margin-center" style={{display: props.weather_description === null ? 'none' : null }}>
+                      <img src={props.second_weather_icon} alt="{`${props.weather_description}`}"/>
+                      <div className="">
+                        <p className="weather-text text-center">{props.weather_description}<br></br>{props.temperature}&deg;</p>
                       </div>
+                    </div>  
+                    <input type="range" name="energy" min="1" max="10" value={energyRanking} onChange={handleEnergyChange}/>    
+                    <p>Your energy: {energyRanking}</p>
+                    <input type="range" name="mood" min="1" max="10" value={moodRanking} onChange={handleMoodChange}/>
+                    <p>Your mood: {moodRanking}</p>
+                  </div>    
+                </div>  
+                <div className="p-5 card-module col-8 margin-center">
+                  <h5>Journal Entry</h5>
+                  <div dangerouslySetInnerHTML={{ __html: props.body }}></div>
+                  <div style={{display: editable ? null : 'none' }} >
+                    <div className="the-quill-editor">
+                      <input name="journal_entry_edit" type="hidden"/>    
+                      <div id="edit-existing-entry"></div>
                     </div>
+                  </div>
+                </div>
+                <div className="pt-3 mb-5 justify-content-center d-flex margin-center">
+                  <button onClick={editable ? handleSaveModeButtonClick : handleEditModeButtonClick} className="edit-button btn neu-button-2">
+                      {editable ? 'Save' : 'Edit'}<img src="./static/icons/edit.png" />
+                  </button>
+                </div>
+            </div>
         </React.Fragment>
     );
-  } 
+  }
 
 function TopJournalEntry() {
         let formatted_date = moment(singleEntry.created_at).format('dddd, MMMM Do');
@@ -127,4 +150,3 @@ function TopJournalEntry() {
     );
   }
 
-//Set up Quill

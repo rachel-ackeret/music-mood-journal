@@ -6,23 +6,28 @@
     <h1 class="p-4 text-center">{{current_user.fname}}, welcome to your journal!</h1>
     <a href="/logout"><u>Log Out</u></a>
     <div class=" d-flex justify-content-center">
-      <div class="journal-create-module background-element neu-shadow-1 my-3">
-          <h2>Create Your Journal Entry Today</h2>
+      <div class="journal-create-module bg-white neu-shadow-1 my-3">
+          <h2 class="mb-5 pt-3">How are you feeling today?</h2>
           <form action ="/journal-saved" method="POST">
-              <p>How are you feeling today?</p>
-              <!--<textarea name = "journal_entry" rows="15"></textarea>-->
+              <h3>Rank how energetic you felt today:</h3>
+              <div class="mb-5 pt-5 pb-5">
+                <input type="range" name="energy" min="1" max="10" value="5" id="energy" class="sliders">
+                <img src="./static/icons/5-energy.png" id="energy-icon">
+              </div>
+              <h3>Rank how your mood felt today:</h3>
+              <div class="mb-5 pt-5 pb-5">
+                <input type="range" name="happiness" min="1" max="10" value="5" id="mood" class="sliders">
+                <img src="./static/icons/5-emoji.png" id="emoji">
+              </div>
+              <br>
+              <h3>Why are you feeling this way?</h3>
               <div class="the-quill-editor">
                 <input name="journal_entry" type="hidden">    
                   <div id="editor-container">
                   </div>
-                </div>
-              <p>Rank your energy today from Low to High</p>
-              <input type="range" name="energy" min="1" max="10" value="5">
-              <p>Rank your mood today from Low to High</p>
-              <input type="range" name="happiness" min="1" max="10" value="5">
-              <br>
-              <input type="submit" value="Submit">
-          </form>
+              </div>
+              <input type="submit" value="Submit" class="btn btn-large neu-button-1 btn-block btn-green">
+          </form> 
       </div>
     </div>
     </div>
@@ -32,6 +37,9 @@
 {% endblock %}
 
 {% block js %}
-<script src="../static/js/quill.js" type="text/babel"></script>
+<script src="../static/js/entry.js" type="text/babel"></script>
+<script>
+
+</script>
 <!--<script src="../static/js/components/edits.js" type="text/babel"></script>-->
 {% endblock %}

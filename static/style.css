@@ -8,7 +8,9 @@ p, body {
 H1, H2, H3, H4, H5, H6 {
     font-family: 'Poppins', sans-serif;
 }
-
+p.small {
+    font-size: 1rem;
+}
 
 .background-gradient {
     background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(21,27,97,1) 53%, rgba(27,23,107,1) 100%);
@@ -25,7 +27,46 @@ H1, H2, H3, H4, H5, H6 {
              -20px -20px 60px #f2ffff;
 }
 .neu-button-1 {
+    box-shadow: 27px 27px 55px #b3c2cc,
+                -27px -27px 55px #f2ffff;
+}
+.neu-button-1:hover {
     box-shadow: -3px 4px 19px #b3c2cc, -20px -20px 60px #f2ffff;
+}
+.neu-button-2 {
+    box-shadow: -3px 4px 19px #d6d6d6, -20px -20px 60px #ffffff;
+}
+.neu-button-2:hover {
+    box-shadow: -3px 4px 19px #d6d6d6, -7px -7px 14px #ffffff;
+}
+.card-module {
+    border-radius: 56px;
+    background: #ECF0F3;
+    box-shadow:  5px 5px 6px #e0e0e0,
+                 -5px -5px 6px #ffffff;
+}
+audio {
+    box-shadow: -1px 1px 3px #c5c5c5, 2px 5px 6px #fbfbfb;
+    border-radius: 32px;
+}
+.edit-button {
+    padding-top: .3rem;
+    padding-bottom: .3rem;
+    background: #d2e4f0;
+    border-radius: 47px;
+    text-transform: uppercase;
+    top: 10px;
+    right: 10px;
+}
+.edit-button img {
+    width: 20px;
+    margin-left: 10px;
+}
+.grid {
+    /* border-radius: 56px; */
+    background: #ecf0f31c;
+    /* box-shadow:  5px 5px 6px #e0e0e0,
+                 -5px -5px 6px #ffffff; */
 }
 .btn-green {
     background: #a4dea4;
@@ -65,12 +106,21 @@ img {
     text-transform: uppercase;
 }
 .weather-section { 
-    /* border: 6px solid #7db5d6; */
-    border-radius: 50%;
+    border: 6px solid #7db5d6;
+    border-radius: 85px;
+    width: 170px;
+}
+.weather-section img {
+    width: 85px;
 }
 .weather-text {
     text-transform: uppercase; 
     font-size: 17px;
+}
+.twitter-share-button {
+    position: absolute;
+    top: 5%;
+    right: 5%;
 }
 .form-group {
     margin-bottom: 1rem;
@@ -86,6 +136,9 @@ img {
 .background-light-1 {
     background-color:#BBE1FA;
 }
+.background-accent-1 {
+    background-color: #E17D66
+}
 .color-light {
     color: #ffffff;
 }
@@ -98,10 +151,8 @@ img {
     border-top: 9px solid #a4dea4;
 }
 .journal-create-module {
-    border-radius: 29%;
     padding: 4rem;
     text-align: center;
-    max-width: 768px;
 }
 /* Style the input field */
 #myInput {
@@ -171,6 +222,10 @@ img {
     -webkit-column-rule: 1px solid lightgrey;
     -moz-column-rule: 1px solid lightgrey;
     column-rule: 1px solid lightgrey;
+}
+
+.sliders {
+    transform: rotate(270deg);
 }
 @media only screen and (min-width: 576px) {
     /* * {

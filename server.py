@@ -220,48 +220,37 @@ def edit_entry(entry_id):
     """
     
     body = request.form.get("journal_entry_edit")
-    energy_ranking = request.form.get("energy")
-    mood_ranking = request.form.get("happiness")
+    energy_ranking = request.form.get("energy_edit")
+    mood_ranking = request.form.get("mood_edit")
 
     journal_entry = Entry.query.get(entry_id)
     
     mood_ranking_updated = ''
     energy_ranking_updated = ''
+
     if body:
         journal_entry.body = body
+
     if energy_ranking:
         journal_entry.energy_ranking = int(energy_ranking)
         energy_ranking_updated = True
     else:
         energy_ranking = journal_entry.energy_ranking
+
     if mood_ranking:
         journal_entry.mood_ranking = int(mood_ranking)
         mood_ranking_updated = True
     else: 
         mood_ranking = journal_entry.mood_ranking 
     
-    
     #Refresh journal entry song if either mood or energy is updated
     if mood_ranking_updated or energy_ranking_updated:
-        journal_entry.spotify_song_id = crud.get_recipe(journal_entry.energy_ranking, journal_entry.mood_ranking, spotify_credentials)
+        user_genres = current_user.genre_choice
+        journal_entry.spotify_song_id = crud.get_recipe(user_genres, journal_entry.energy_ranking, journal_entry.mood_ranking, spotify_credentials)
     
     db.session.add(journal_entry)
     db.session.commit()
     
-    return {
-        "id": journal_entry.id,
-        "body": journal_entry.body,
-        "created_at": journal_entry.created_at,
-        "spotify_song_id": journal_entry.spotify_song_id,
-        "user_id": journal_entry.user_id,
-        "energy_ranking": journal_entry.energy_ranking,
-        "mood_ranking": journal_entry.mood_ranking
-    }
-
-
-@app.route("/api/entry/<entry_id>", methods=["POST"])
-def fetch_entry(entry_id):
-    journal_entry = Entry.query.get(entry_id)
     return {
         "id": journal_entry.id,
         "body": journal_entry.body,
