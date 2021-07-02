@@ -220,6 +220,8 @@ def edit_entry(entry_id):
     """
     
     body = request.form.get("journal_entry_edit")
+    print(body)
+    print('i am here')
     energy_ranking = request.form.get("energy_edit")
     mood_ranking = request.form.get("mood_edit")
 
@@ -246,7 +248,7 @@ def edit_entry(entry_id):
     #Refresh journal entry song if either mood or energy is updated
     if mood_ranking_updated or energy_ranking_updated:
         user_genres = current_user.genre_choice
-        journal_entry.spotify_song_id = crud.get_recipe(user_genres, journal_entry.energy_ranking, journal_entry.mood_ranking, spotify_credentials)
+        journal_entry.spotify_song_id, journal_entry.song_details.song_image, journal_entry.song_details.song_preview, journal_entry.song_details.song_artist, journal_entry.song_details.song_name = crud.get_recipe(user_genres, journal_entry.energy_ranking, journal_entry.mood_ranking, spotify_credentials)
     
     db.session.add(journal_entry)
     db.session.commit()
@@ -258,7 +260,8 @@ def edit_entry(entry_id):
         "spotify_song_id": journal_entry.spotify_song_id,
         "user_id": journal_entry.user_id,
         "energy_ranking": journal_entry.energy_ranking,
-        "mood_ranking": journal_entry.mood_ranking
+        "mood_ranking": journal_entry.mood_ranking,
+        "song_details": journal_entry.song_details
     }
 
 

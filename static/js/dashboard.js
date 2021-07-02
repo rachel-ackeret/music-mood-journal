@@ -29,7 +29,6 @@ function getStartEndDateWeek() {
     },
     (res) => {
         allEntries = res;
-      console.log(res);
       for (const prop of res) {
         dateRange.push(prop.created_at);
         moodRating.push(prop.mood_ranking);
@@ -40,7 +39,6 @@ function getStartEndDateWeek() {
       myChart.data.datasets[0].data = moodData;
       myChart.data.datasets[1].data = energyData;
       myChart.update();
-      console.log('render!');
       renderReactTwo();
     }
   );
@@ -226,35 +224,43 @@ function getStartEndDateWeek() {
 function JournalEntry(props) {
 
     return (
-        <div className="card bg-white shadow rounded my-3" >
-            <div className="card-body" id={props.id}>
+            <div className="journal-entry-module my-5 p-5 d-flex justify-content-center text-center n-shadow" id={props.id}>
+              <div className="section col-6">
                 <h3>Entry on {props.created_at}</h3>
-                <p>{ props.body }</p>
+                <div className="p-3 mb-3 weather-section margin-center" style={{display: props.weather_description === null ? 'none' : null }}>
+                  <img className="margin-center" src={props.second_weather_icon} alt="{`${props.weather_description}`}"/>
+                  <div className="">
+                    <p className="weather-text text-center">{props.weather_description}<br></br>{props.temperature}&deg;</p>
+                  </div>
+                </div>  
                 <p>Mood: {props.mood_ranking}</p>
                 <p>Energy: {props.energy_ranking}</p>
-                <audio controls="controls" style={{display: props.song_preview === null ? 'none' : null }}>
-                  <source src={props.song_preview} type="audio/mpeg"/>
+                <div dangerouslySetInnerHTML={{ __html: props.body }}></div>
+              </div>
+              <div className="border-left-module music-section m-3 p-5 col-4">
+                <h4 className="song-title">{props.song_name}</h4>
+                <p className="small song-artist">{props.song_artist}</p>
+                <a href={`https://open.spotify.com/track/${props.spotify_song_id}`} target="_blank">
+                  <img src={props.song_image} className="shadow"/>
+                </a>
+                <audio controls="controls" className="my-4" style={{display: props.song_preview === null ? 'none' : null }}>
+                  <source src={props.song_preview} type="audio/mpeg" />
                 </audio>
-                <div style={{display: props.weather_description === null ? 'none' : null }}>
-                <p>{props.temperature} &deg;</p>
-                <img className ="col-3" src={props.second_weather_icon} alt="{`${props.weather_description}`}"/>
-                
-                </div>
+              </div>
             </div>
-          </div>
     );
   }
 // define TradingCardContainer component
 function GenerateJournalEntries() {
   //create empty list called paragraphs
-  console.log(allEntries);
   const journalEntriesProps = [];
     for (let entry of allEntries) {
+      let formatted_date = moment(entry.created_at).format('dddd, MMMM Do, YYYY');
       journalEntriesProps.push(
         <JournalEntry
           key={entry.id}
           body={entry.body}
-          created_at={entry.created_at}
+          created_at={formatted_date}
           spotify_song_id={entry.spotify_song_id}
           user_id={entry.user_id}
           energy_ranking={entry.energy_ranking}
@@ -279,7 +285,6 @@ function GenerateJournalEntries() {
 
 function renderReactTwo() 
 {
-  console.log('render!');
   ReactDOM.render( 
     <GenerateJournalEntries/>,
     document.querySelector('#test-journal-entries')

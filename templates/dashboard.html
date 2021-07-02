@@ -3,7 +3,7 @@
 {% block body %}
 <div class="grid">
     <div id="latest-post" class="text-center"></div>
-    <div class="shadow container-sm py-4">
+    <div class="border-top-module container-sm py-4">
         <h2 class="text-center py-3">Your Mood + Energy</h1>
         <div class="center-block d-flex justify-content-center ">
             <div class="col-1 d-flex align-items-center justify-content-end">
@@ -23,19 +23,18 @@
             </div>
             </div>
         </div>
-    </div>
-
     <div id="test-journal-entries" class="container-sm d-flex flex-column">
-
     </div>
 </div>    
 
 {% endblock %}
 
 {% block js %}
+<script src="../static/js/entry.js" type="text/babel"></script>
 <script src="../static/js/dashboard.js" type="text/babel"></script>
 <script src="../static/js/latest-post.jsx" type="text/babel"></script>
 <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+
 
 {% endblock %} 
 {% endif %}

@@ -18,6 +18,7 @@ function LatestJournalEntry(props) {
     const [energyRanking, setEnergyRanking] = React.useState(props.energy_ranking);
     const [moodRanking, setMoodRanking] = React.useState(props.mood_ranking);
     const [bodyText, setBodyText] = React.useState(props.body);
+    // const [song, setSong] = React.useState(props.song_details);
     
     // Toggle edit mode (ex.: if `editable` === true, set to false)
     const handleEditModeButtonClick = () => {
@@ -41,11 +42,12 @@ function LatestJournalEntry(props) {
       setBodyText(journalEntry.value)
 
       // Make post request to update rating in DB
-      $.post(`/api/entry-edit/${props.entryId}`, {mood_edit: moodRanking}, {energy_edit: energyRanking}, {journal_entry_edit: bodyText}, (res) => {
+      $.post(`/api/entry-edit/${props.entryId}`, ({mood_edit: moodRanking, energy_edit: energyRanking, journal_entry_edit: bodyText}), (res) => {
         console.log(res)
-        setMoodRanking(props.mood_ranking);
-        setEnergyRanking(props.energy_ranking);
+        setMoodRanking(res.mood_ranking);
+        setEnergyRanking(res.energy_ranking);
         setBodyText(res.body);
+        setSong(res.song_details);
       });
     };
     const handleEnergyChange = (e) => {

@@ -46,9 +46,13 @@ p.small {
                  -5px -5px 6px #ffffff;
 }
 audio {
-    box-shadow: -1px 1px 3px #c5c5c5, 2px 5px 6px #fbfbfb;
+    box-shadow: -1px 1px 3px #8e8e8e, 2px 5px 6px #d4d4d4;
     border-radius: 32px;
 }
+.n-shadow {
+    box-shadow: 5px 5px 6px #c2c5c7, 7px 5px 30px #dcdcdc;
+}
+
 .edit-button {
     padding-top: .3rem;
     padding-bottom: .3rem;
@@ -64,7 +68,7 @@ audio {
 }
 .grid {
     /* border-radius: 56px; */
-    background: #ecf0f31c;
+    background: #ffffff1c;
     /* box-shadow:  5px 5px 6px #e0e0e0,
                  -5px -5px 6px #ffffff; */
 }
@@ -116,6 +120,18 @@ img {
 .weather-text {
     text-transform: uppercase; 
     font-size: 17px;
+}
+.journal-entry-module {
+    background: #ecf0f314;
+    box-shadow:  5px 5px 6px #c2c5c7,
+             -5px -5px 6px #ffffff;
+}
+.music-section img {
+    max-width:250px;
+    border-radius: 18%;
+}
+.music-section audio {
+    max-width: 250px;
 }
 .twitter-share-button {
     position: absolute;
@@ -272,6 +288,15 @@ img {
         -webkit-column-rule: 1px solid lightgrey;
         -moz-column-rule: 1px solid lightgrey;
         column-rule: 1px solid lightgrey;
+    }
+    .border-bottom-module {
+        border-bottom: 3px solid #ffffff;
+    }
+    .border-top-module {
+        border-top: 3px solid #ffffff;
+    }
+    .border-left-module {
+        border-left: 3px solid #ffffff;
     }
 }
 
