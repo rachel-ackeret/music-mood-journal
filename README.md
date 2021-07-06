@@ -14,9 +14,9 @@ Features:
 - sliders representing the specific song attributes, in order to show the relevance to a user's mood & energy inputs. (to be refined!)
 
 **Setup**
-Download files, and install requirements from requirements.txt into your virtual environment.
-Request API keys from both Spotify and OpenWeather API. Save these to your secrets.sh using the variable names in the code.
-Run in Python3 using Flask.
+- Download files, and install requirements from requirements.txt into your virtual environment.
+- Request API keys from both Spotify and OpenWeather API. Save these to your secrets.sh using the variable names in the code.
+- Run in Python3 using Flask.
 
 ________________________________________________________
 
