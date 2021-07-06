@@ -15,11 +15,37 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
-
+    
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding-left:1rem;">
+        <a class="navbar-brand pl-2" href="/">Music Mood Journal</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/journal">Create Entry</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/genre">Update Genres</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Log Out</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
     <body>
             {% for message in get_flashed_messages() %}
               <div class="position-absolute" style="padding:3rem; top:0"><p><strong>{{ message }}</strong></p></div>
+              <div class=""
             {% endfor %}
+            
           {% block body %}
           BODY OF PAGE GOES HERE VIA INHERITANCE
           {% endblock %}

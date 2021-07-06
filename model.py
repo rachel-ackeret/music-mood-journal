@@ -89,6 +89,9 @@ class SongDetails(db.Model):
     song_preview = db.Column(db.String, nullable=True)
     song_artist = db.Column(db.String, nullable=True)
     song_name = db.Column(db.String, nullable=True)
+    danceability = db.Column(db.Float, nullable=True)
+    energy = db.Column(db.Float, nullable=True)
+    tempo = db.Column(db.Float, nullable=True)
     entry_id = db.Column(db.Integer, db.ForeignKey(Entry.id))
    
     entry = db.relationship('Entry', backref=db.backref('song_details', uselist=False))

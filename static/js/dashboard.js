@@ -19,6 +19,29 @@ function getStartEndDateWeek() {
   let calendarPositionWeeks = 0;
   let calendarPositionMonths = 0;
   
+
+  const mojis = ['./static/icons/1-emoji.png', 
+  './static/icons/2-emoji.png', 
+  './static/icons/3-emoji.png', 
+  './static/icons/4-emoji.png',
+  './static/icons/5-emoji.png', 
+  './static/icons/6-emoji.png',
+  './static/icons/7-emoji.png', 
+  './static/icons/8-emoji.png',
+  './static/icons/9-emoji.png', 
+  './static/icons/10-emoji.png'];
+
+const energies = ['./static/icons/1-energy.png', 
+  './static/icons/2-energy.png', 
+  './static/icons/3-energy.png', 
+  './static/icons/4-energy.png',
+  './static/icons/5-energy.png', 
+  './static/icons/6-energy.png',
+  './static/icons/7-energy.png', 
+  './static/icons/8-energy.png',
+  './static/icons/9-energy.png', 
+  './static/icons/10-energy.png'];
+
     //BASE CONFIG
   
   $.get(
@@ -224,20 +247,26 @@ function getStartEndDateWeek() {
 function JournalEntry(props) {
 
     return (
-            <div className="journal-entry-module my-5 p-5 d-flex justify-content-center text-center n-shadow" id={props.id}>
-              <div className="section col-6">
-                <h3>Entry on {props.created_at}</h3>
+            <div className="journal-entry-module my-5 p-5 d-lg-flex justify-content-center text-center n-shadow" id={props.id}>
+              <div className="section col-lg-6">
+                <h3 className="mb-lg-5 mb-3">Entry on {props.created_at}</h3>
                 <div className="p-3 mb-3 weather-section margin-center" style={{display: props.weather_description === null ? 'none' : null }}>
                   <img className="margin-center" src={props.second_weather_icon} alt="{`${props.weather_description}`}"/>
                   <div className="">
                     <p className="weather-text text-center">{props.weather_description}<br></br>{props.temperature}&deg;</p>
                   </div>
                 </div>  
-                <p>Mood: {props.mood_ranking}</p>
-                <p>Energy: {props.energy_ranking}</p>
+                <div className="d-lg-flex my-lg-5 my-3 justify-content-around">
+                  <div className="d--flex flex-column">
+                  <h5>Mood:</h5><img src={props.moodEmoji} />
+                  </div>
+                  <div className="d--flex flex-column">
+                  <h5>Energy:</h5> <img src={props.energyEmoji} />
+                  </div>
+                </div>
                 <div dangerouslySetInnerHTML={{ __html: props.body }}></div>
               </div>
-              <div className="border-left-module music-section m-3 p-5 col-4">
+              <div className="border-left-module spotify-custom-setup m-3 p-lg-3 col-lg-5">
                 <h4 className="song-title">{props.song_name}</h4>
                 <p className="small song-artist">{props.song_artist}</p>
                 <a href={`https://open.spotify.com/track/${props.spotify_song_id}`} target="_blank">
@@ -246,6 +275,17 @@ function JournalEntry(props) {
                 <audio controls="controls" className="my-4" style={{display: props.song_preview === null ? 'none' : null }}>
                   <source src={props.song_preview} type="audio/mpeg" />
                 </audio>
+                <hr />
+                <div className = "d-flex justify-content-around py-5 ">
+                    <input className ="vertical range_sliders col-3" type="range" min="0" max="1" step=".01" value={props.danceability} readOnly/>
+                    <input className ="vertical range_sliders col-3" type="range" min="0" max="1" step=".01" value={props.energy} readOnly/>
+                    <input className ="vertical range_sliders col-3" type="range" min="30" max="160" step="1" value={props.tempo} readOnly/>
+                    </div>
+                    <div className = "d-flex justify-content-around mt-2 py-5">
+                      <p className="sideways">Danceability</p>
+                      <p className="sideways">Energy</p>
+                      <p className="sideways">Tempo</p>
+                    </div>
               </div>
             </div>
     );
@@ -256,11 +296,15 @@ function GenerateJournalEntries() {
   const journalEntriesProps = [];
     for (let entry of allEntries) {
       let formatted_date = moment(entry.created_at).format('dddd, MMMM Do, YYYY');
+      let energyEmoji = energies[entry.energy_ranking - 1];
+      let moodEmoji = mojis[entry.mood_ranking - 1];
       journalEntriesProps.push(
         <JournalEntry
           key={entry.id}
           body={entry.body}
           created_at={formatted_date}
+          energyEmoji={energyEmoji}
+          moodEmoji={moodEmoji}
           spotify_song_id={entry.spotify_song_id}
           user_id={entry.user_id}
           energy_ranking={entry.energy_ranking}
@@ -273,6 +317,9 @@ function GenerateJournalEntries() {
           song_image={entry.song_image}
           song_artist={entry.song_artist}
           song_name={entry.song_name}
+          danceability={entry.danceability}
+          energy={entry.energy}
+          tempo={entry.tempo}
         />
       );
     }

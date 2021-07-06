@@ -177,6 +177,13 @@ def get_song_info(the_resulting_songs, spotify_credentials):
     song_info.append(song_key["preview_url"])
     song_info.append(song_key["artists"][0]["name"])
     song_info.append(song_key["name"])
+    
+    audio_analysis = spotify_credentials.audio_features(song_key["id"])
+    print(audio_analysis)
+    
+    song_info.append(audio_analysis[0]["danceability"])
+    song_info.append(audio_analysis[0]["energy"])
+    song_info.append(audio_analysis[0]["tempo"])
 
     print(song_info)
 

@@ -129,7 +129,6 @@ def save_genre():
 
     genre_choice = request.form.getlist("genre-choice[]")
     print(genre_choice)
-    print('hello???')
     # user = User(
     #     genre_choice=genre_choice
     # )
@@ -137,7 +136,7 @@ def save_genre():
     current_user.genre_choice = genre_choice
     db.session.commit()
     
-    flash("Created User Successfully!")
+    flash("Genres Updated")
 
     return redirect("/")
 
@@ -157,7 +156,7 @@ def save_journal():
     zipcode = current_user.zipcode
     genres = current_user.genre_choice
 
-    spotify_song_id, song_image, song_preview, song_artist, song_name = crud.get_recipe(genres, energy_ranking, mood_ranking, spotify_credentials)
+    spotify_song_id, song_image, song_preview, song_artist, song_name, danceability, energy, tempo = crud.get_recipe(genres, energy_ranking, mood_ranking, spotify_credentials)
     temperature, clouds, weather_id, weather_description, weather_icon, second_weather_icon = crud.return_weather_data(zipcode, WEATHER_KEY)
 
     print(song_artist)
@@ -175,7 +174,10 @@ def save_journal():
     song = SongDetails(song_image=song_image,
                         song_preview=song_preview,
                         song_artist=song_artist,
-                        song_name=song_name)
+                        song_name=song_name,
+                        danceability=danceability,
+                        energy=energy,
+                        tempo=tempo)
     
     entry = Entry(body=body, 
                 spotify_song_id=spotify_song_id,
@@ -221,11 +223,12 @@ def edit_entry(entry_id):
     
     body = request.form.get("journal_entry_edit")
     print(body)
-    print('i am here')
     energy_ranking = request.form.get("energy_edit")
+    print(energy_ranking)
     mood_ranking = request.form.get("mood_edit")
-
+    print(entry_id)
     journal_entry = Entry.query.get(entry_id)
+    song_details = SongDetails.query.filter(SongDetails.entry_id==entry_id).first()
     
     mood_ranking_updated = ''
     energy_ranking_updated = ''
@@ -248,12 +251,13 @@ def edit_entry(entry_id):
     #Refresh journal entry song if either mood or energy is updated
     if mood_ranking_updated or energy_ranking_updated:
         user_genres = current_user.genre_choice
-        journal_entry.spotify_song_id, journal_entry.song_details.song_image, journal_entry.song_details.song_preview, journal_entry.song_details.song_artist, journal_entry.song_details.song_name = crud.get_recipe(user_genres, journal_entry.energy_ranking, journal_entry.mood_ranking, spotify_credentials)
+        journal_entry.spotify_song_id, song_details.song_image, song_details.song_preview, song_details.song_artist, song_details.song_name, song_details.danceability, song_details.energy, song_details.tempo = crud.get_recipe(user_genres, journal_entry.energy_ranking, journal_entry.mood_ranking, spotify_credentials)
     
+    db.session.add(song_details)
     db.session.add(journal_entry)
     db.session.commit()
     
-    return {
+    entry_dict = {
         "id": journal_entry.id,
         "body": journal_entry.body,
         "created_at": journal_entry.created_at,
@@ -261,8 +265,15 @@ def edit_entry(entry_id):
         "user_id": journal_entry.user_id,
         "energy_ranking": journal_entry.energy_ranking,
         "mood_ranking": journal_entry.mood_ranking,
-        "song_details": journal_entry.song_details
+        "song_image": song_details.song_image,
+        "song_preview": song_details.song_preview,
+        "song_artist": song_details.song_artist,
+        "song_name": song_details.song_name,
+        "danceability": song_details.danceability,
+        "energy": song_details.energy,
+        "tempo": song_details.tempo
     }
+    return entry_dict
 
 
 @app.route("/api/entries/")
@@ -305,6 +316,9 @@ def get_latest_entries():
             "song_preview": journal_entry.song_details and journal_entry.song_details.song_preview,
             "song_artist": journal_entry.song_details and journal_entry.song_details.song_artist,
             "song_name": journal_entry.song_details and journal_entry.song_details.song_name,
+            "danceability": journal_entry.song_details and journal_entry.song_details.danceability,
+            "energy": journal_entry.song_details and journal_entry.song_details.energy,
+            "tempo": journal_entry.song_details and journal_entry.song_details.tempo
         })
 
     return jsonify(entries_as_json)
@@ -336,6 +350,9 @@ def get_last_entry():
         "song_preview": journal_entry.song_details and journal_entry.song_details.song_preview,
         "song_artist": journal_entry.song_details and journal_entry.song_details.song_artist,
         "song_name": journal_entry.song_details and journal_entry.song_details.song_name,
+        "danceability": journal_entry.song_details and journal_entry.song_details.danceability,
+        "energy": journal_entry.song_details and journal_entry.song_details.energy,
+        "tempo": journal_entry.song_details and journal_entry.song_details.tempo
     }
 
     return jsonify(entry_json)
