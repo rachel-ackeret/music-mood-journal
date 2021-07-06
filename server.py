@@ -362,7 +362,7 @@ def get_last_entry():
 
 
 if __name__ == "__main__":
-    app.run()
     connect_to_db(app)
+    app.run()
     # app.run(host="0.0.0.0")
     # app.run(use_reloader=True, use_debugger=True)
