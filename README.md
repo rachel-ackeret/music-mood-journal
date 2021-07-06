@@ -13,7 +13,14 @@ Features:
 - Edit and save button using React.JS to update the latest entry.
 - sliders representing the specific song attributes, in order to show the relevance to a user's mood & energy inputs. (to be refined!)
 
-Steps:
+**Setup**
+Download files, and install requirements from requirements.txt into your virtual environment.
+Request API keys from both Spotify and OpenWeather API. Save these to your secrets.sh using the variable names in the code.
+Run in Python3 using Flask.
+
+________________________________________________________
+
+How to use the app:
 1. Create Account, or Log in
 ![Log In / Create Account](https://user-images.githubusercontent.com/43709904/124631284-3d792980-de51-11eb-8300-e513c4e28886.png)
 
