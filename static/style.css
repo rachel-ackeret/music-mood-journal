@@ -161,7 +161,9 @@ img {
 .register-module {
     border-top: 9px solid #a4dea4;
 }
-
+.entry-module {
+    border-top: 9px solid #ECF0F3;
+}
 /* QUILL EDITOR */
 .ql-editor.ql-blank {
     background: #ffffff;
@@ -181,19 +183,6 @@ img {
     -webkit-column-gap: 40px;
     -moz-column-gap: 40px;
     column-gap: 40px;
-    -webkit-column-rule: 1px solid lightgrey;
-    -moz-column-rule: 1px solid lightgrey;
-    column-rule: 1px solid lightgrey;
-}
-
-.genre-picker {
-    padding: 15px;
-    -webkit-column-count: 2;
-    -moz-column-count: 2;
-    column-count: 2;
-    -webkit-column-gap: 25px;
-    -moz-column-gap: 25px;
-    column-gap: 25px;
     -webkit-column-rule: 1px solid lightgrey;
     -moz-column-rule: 1px solid lightgrey;
     column-rule: 1px solid lightgrey;

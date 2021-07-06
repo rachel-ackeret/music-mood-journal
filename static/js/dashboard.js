@@ -247,7 +247,7 @@ const energies = ['./static/icons/1-energy.png',
 function JournalEntry(props) {
 
     return (
-            <div className="journal-entry-module my-5 p-5 d-lg-flex justify-content-center text-center n-shadow" id={props.id}>
+            <div className="entry-module journal-entry-module my-5 p-5 d-lg-flex justify-content-center text-center n-shadow" id={props.id}>
               <div className="section col-lg-6">
                 <h3 className="mb-lg-5 mb-3">Entry on {props.created_at}</h3>
                 <div className="p-3 mb-3 weather-section margin-center" style={{display: props.weather_description === null ? 'none' : null }}>
