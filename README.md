@@ -4,7 +4,7 @@ A journal interface using the Spotipy API to match a user input with a song and 
 
 https://www.youtube.com/watch?v=IZ8usX6VDjI
 
-Features: 
+**Features**:
 - Ability to choose top 3 genres to seed into Spotify API recommendation.
 - Sliders with visual representations of the mood/energy recording for the day.
 - Weather recorded for day of data entry, matched with an external weather icon set. Using OpenWeatherAPI.
@@ -13,7 +13,7 @@ Features:
 - Edit and save button using React.JS to update the latest entry.
 - sliders representing the specific song attributes, in order to show the relevance to a user's mood & energy inputs. (to be refined!)
 
-**Setup**
+**Setup**:
 - Download files, and install requirements from requirements.txt into your virtual environment.
 - Request API keys from both Spotify and OpenWeather API. Save these to your secrets.sh using the variable names in the code.
 - Run in Python3 using Flask.
