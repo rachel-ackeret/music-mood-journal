@@ -47,12 +47,12 @@ function LatestJournalEntry(props) {
 
       //QUILL SAVE
       var journalEntry = document.querySelector('input[name=journal_entry_edit]');
-      journalEntry.value = quill_edit.root.innerHTML;
+      journalEntry.value = DOMPurify.sanitize(quill_edit.root.innerHTML);
       console.log(journalEntry.value)
       setBodyText(journalEntry.value)
 
       // Make post request to update rating in DB
-      $.post(`/api/entry-edit/${props.entryId}`, ({mood_edit: moodRanking, energy_edit: energyRanking, journal_entry_edit: quill_edit.root.innerHTML}), (res) => {
+      $.post(`/api/entry-edit/${props.entryId}`, ({mood_edit: moodRanking, energy_edit: energyRanking, journal_entry_edit: journalEntry.value}), (res) => {
         setMoodRanking(res.mood_ranking);
         setEnergyRanking(res.energy_ranking);
         setBodyText(res.body);
@@ -73,7 +73,7 @@ function LatestJournalEntry(props) {
       editable ? setMoodRanking(e.target.value) : setMoodRanking(moodRanking);
     };
     const handleBodyChange = (e) => {
-      editable ? setBodyText(quill_edit.root.innerHTML) : setBodyText(bodyText);
+      editable ? setBodyText(DOMPurify.sanitize(quill_edit.root.innerHTML)) : setBodyText(bodyText);
     };
     return (
         <React.Fragment> 

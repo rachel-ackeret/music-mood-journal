@@ -12,8 +12,8 @@ var quill = new Quill('#editor-container', {
 var form = document.querySelector('form');
   form.onsubmit = function() {
   // Populate hidden form on submit
-  var journalEntry = document.querySelector('input[name=journal_entry]');
-  journalEntry.value = quill.root.innerHTML;
+    var journalEntry = document.querySelector('input[name=journal_entry]');
+    journalEntry.value = DOMPurify.sanitize(quill.root.innerHTML);
 }
 
 
