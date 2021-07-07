@@ -39,6 +39,7 @@ function LatestJournalEntry(props) {
           },
           theme: 'snow'
       });
+      quill_edit.root.innerHTML = bodyText;
     };
   
     const handleSaveModeButtonClick = () => {
@@ -130,7 +131,7 @@ function LatestJournalEntry(props) {
                       <div style={{display: editable ? null : 'none' }} >
                         <div className="the-quill-editor">
                           <input name="journal_entry_edit" value="bodyText" type="hidden"/>    
-                          <div id="edit-existing-entry" onChange={handleBodyChange}></div>
+                          <div id="edit-existing-entry"></div>
                         </div>
                       </div>
                   </div>
