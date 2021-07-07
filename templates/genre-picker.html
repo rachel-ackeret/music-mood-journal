@@ -4,7 +4,7 @@
     <div class="container bg-white shadow">
         <form action ="/save-genre" method="POST" >
             <fieldset>
-                <h1 class="py-4 text-align-center">Choose your top 3 genres</h1>
+                <h1 class="py-4 text-align-center">Choose up to 3 of your preferred music genres:</h1>
                 <div class="genre-picker">
                     {% for genre in genres %}
                         <input class="checkbox display-inline" type="checkbox" name="genre-choice[]" id="{{genre}}"  value="{{genre}}"><span style="padding-left:.5rem;">{{genre}}</span><br>
