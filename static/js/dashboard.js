@@ -256,7 +256,7 @@ function JournalEntry(props) {
                     <p className="weather-text text-center">{props.weather_description}<br></br>{props.temperature}&deg;</p>
                   </div>
                 </div>  
-                <div className="d-lg-flex my-lg-5 my-3 justify-content-around">
+                <div className="d-flex my-5 justify-content-around">
                   <div className="d--flex flex-column">
                   <h5>Mood:</h5><img src={props.moodEmoji} />
                   </div>
@@ -264,7 +264,10 @@ function JournalEntry(props) {
                   <h5>Energy:</h5> <img src={props.energyEmoji} />
                   </div>
                 </div>
-                <div dangerouslySetInnerHTML={{ __html: props.body }}></div>
+                <div className="bg-white p-3 rounded">
+                  <h5>Your thoughts for the day:</h5>
+                  <div dangerouslySetInnerHTML={{ __html: props.body }}></div>
+                </div>
               </div>
               <div className="border-left-module spotify-custom-setup m-3 p-lg-3 col-lg-5">
                 <h4 className="song-title">{props.song_name}</h4>
@@ -281,7 +284,7 @@ function JournalEntry(props) {
                     <input className ="vertical range_sliders col-3" type="range" min="0" max="1" step=".01" value={props.energy} readOnly/>
                     <input className ="vertical range_sliders col-3" type="range" min="30" max="160" step="1" value={props.tempo} readOnly/>
                     </div>
-                    <div className = "d-flex justify-content-around mt-2 py-5">
+                    <div className = "d-flex justify-content-around mt-2 pt-lg-5 pt-3">
                       <p className="sideways">Danceability</p>
                       <p className="sideways">Energy</p>
                       <p className="sideways">Tempo</p>

@@ -44,7 +44,7 @@
     </header>
     <body>
             {% for message in get_flashed_messages() %}
-              <div class="position-absolute" style="padding:3rem; top:0"><p><strong>{{ message }}</strong></p></div>
+              <div class="position-absolute" style="padding:3rem; top:2rem; left: 0; right: 0;"><p><strong>{{ message }}</strong></p></div>
             {% endfor %}
             
           {% block body %}

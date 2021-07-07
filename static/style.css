@@ -174,7 +174,9 @@ img {
     border-right: none;
     box-shadow: inset -5px -5px 17px #cedae2, inset 5px 5px 17px #f6ffff;
 }
-
+.weather-section img {
+    max-width: 65px;
+}
 .genre-picker {
     padding: 15px;
     -webkit-column-count: 3;

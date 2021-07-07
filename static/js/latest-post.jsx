@@ -109,13 +109,13 @@ function LatestJournalEntry(props) {
                     <p>Your energy: {energyRanking}</p>
                     <input type="range" name="mood" min="1" max="10" value={moodRanking} onChange={handleMoodChange}/>
                     <p>Your mood: {moodRanking}</p>
-                    <h5 className="mt-lg-5 mt-3">Song specs:</h5>
+                    <h5 className="mt-lg-5 mt-3 pb-4">Song specs:</h5>
                     <div className = "d-flex justify-content-center py-4">
-                    <input className ="vertical range_sliders col-3" type="range" min="0" max="1" step=".01" value={danceability} readOnly/>
-                    <input className ="vertical range_sliders col-3" type="range" min="0" max="1" step=".01" value={energy} readOnly/>
-                    <input className ="vertical range_sliders col-3" type="range" min="30" max="160" step="1" value={tempo} readOnly/>
+                    <input className ="vertical range_sliders col-4" type="range" min="0" max="1" step=".01" value={danceability} readOnly/>
+                    <input className ="vertical range_sliders col-4" type="range" min="0" max="1" step=".01" value={energy} readOnly/>
+                    <input className ="vertical range_sliders col-4" type="range" min="30" max="160" step="1" value={tempo} readOnly/>
                     </div>
-                    <div className = "d-flex justify-content-center pt-4">
+                    <div className = "d-flex justify-content-center pt-md-4 pt-5">
                       <p className="sideways">Danceability</p>
                       <p className="sideways">Energy</p>
                       <p className="sideways">Tempo</p>
@@ -124,7 +124,7 @@ function LatestJournalEntry(props) {
                 </div>  
                 <div className="p-5 card-module col-lg-8 margin-center d-lg-flex">
                   
-                  <div className="col-9">
+                  <div className="col-lg-9">
                     <h5>Journal Entry</h5>
                     <div dangerouslySetInnerHTML={{ __html: bodyText }}></div>
                       <div style={{display: editable ? null : 'none' }} >
@@ -134,7 +134,7 @@ function LatestJournalEntry(props) {
                         </div>
                       </div>
                   </div>
-                  <div className="p-3 mb-3 weather-section margin-center col-2" style={{display: props.weather_description === null ? 'none' : null }}>
+                  <div className="p-3 mb-lg-0 mb-1 weather-section margin-center col-lg-2" style={{display: props.weather_description === null ? 'none' : null }}>
                       <img src={props.second_weather_icon} alt="{`${props.weather_description}`}"/>
                       <div className="">
                         <p className="weather-text text-center">{props.weather_description}<br></br>{props.temperature}&deg;</p>
