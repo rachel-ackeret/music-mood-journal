@@ -9,7 +9,7 @@ from flask_login import LoginManager, login_user, login_required, current_user, 
 from sqlalchemy import desc
 from model import connect_to_db, User, Entry, db, WeatherDetails, SongDetails
 import crud
-from flask.ext.bcrypt import Bcrypt
+import bcrypt
 
 # Weather API
 WEATHER_KEY = os.environ['WEATHER_API_KEY']
@@ -17,7 +17,6 @@ WEATHER_KEY = os.environ['WEATHER_API_KEY']
 # Flask setup
 app = Flask(__name__)
 app.secret_key = "SECRETSECRETSECRET"
-bcrypt = Bcrypt(app)
 
 # Flask login setup
 login_manager = LoginManager()
@@ -67,12 +66,12 @@ def homepage():
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form.get("username")
-    password = request.form.get("password")
+    password = request.form.get("password").encode('utf-8')
     
-    pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+    pw_hash = bcrypt.hashpw(password, bcrypt.gensalt(14))
 
     user = User.query.filter_by(username=username).first()
-    if bcrypt.check_password_hash(pw_hash, username):
+    if bcrypt.checkpw(user.password, pw_hash):
         # Call flask_login.login_user to login a user
         login_user(user)
 
@@ -93,7 +92,7 @@ def login():
 @app.route("/register", methods=["POST"])
 def register():
     username = request.form.get("username")
-    password = request.form.get("password")
+    password = request.form.get("password").encode("utf-8")
     fname = request.form.get("fname")
     zipcode = request.form.get("zipcode")
 
@@ -123,12 +122,12 @@ def resetpw():
 
 
 @app.route("/password-reset-save", methods=["POST"])
-def resetpw():
+def savepw():
 
     username = request.form.get("username")
-    password = request.form.get("password")
+    password = request.form.get("password").encode("utf-8")
 
-    pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+    pw_hash = bcrypt.hashpw(password, bcrypt.gensalt(14))
     
     user = User.query.filter_by(username=username).first()
 
