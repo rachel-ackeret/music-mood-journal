@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
                        autoincrement=True,
                        )
     username = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.String(15), nullable=False)
+    password = db.Column(db.String, nullable=False)
     fname = db.Column(db.String(15), nullable=True)
     zipcode = db.Column(db.Integer, nullable=True)
     genre_choice = db.Column(db.String, nullable=True)

@@ -68,10 +68,12 @@ def login():
     username = request.form.get("username")
     password = request.form.get("password").encode('utf-8')
     
-    pw_hash = bcrypt.hashpw(password, bcrypt.gensalt(14))
+    pw_hash = bcrypt.hashpw(password, bcrypt.gensalt())
 
     user = User.query.filter_by(username=username).first()
-    if bcrypt.checkpw(user.password, pw_hash):
+    encoded_pw = user.password.encode('utf-8')
+
+    if bcrypt.checkpw(password, encoded_pw):
         # Call flask_login.login_user to login a user
         login_user(user)
 
@@ -80,10 +82,6 @@ def login():
 
         return redirect("/journal")
     
-    #If password is empty or reset for security purposes -
-    if user.password == '_':
-        return redirect("/password-reset")
-
     print("sorry try again")
     flash("Sorry try again.")
     return redirect("/")
@@ -96,12 +94,13 @@ def register():
     fname = request.form.get("fname")
     zipcode = request.form.get("zipcode")
 
-    pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+    pw_hash = bcrypt.hashpw(password, bcrypt.gensalt())
+    pw_hash_decoded = pw_hash.decode('utf-8')
 
     if not User.query.filter_by(username=username).first():
         user = User(
             username=username,
-            password=pw_hash,
+            password=pw_hash_decoded,
             fname = fname,
             zipcode = zipcode,
         )
@@ -127,14 +126,15 @@ def savepw():
     username = request.form.get("username")
     password = request.form.get("password").encode("utf-8")
 
-    pw_hash = bcrypt.hashpw(password, bcrypt.gensalt(14))
-    
+    pw_hash = bcrypt.hashpw(password, bcrypt.gensalt())
+    pw_hash_decoded = pw_hash.decode('utf-8')
+
     user = User.query.filter_by(username=username).first()
 
-    if user.password == '_':
-        user.password=pw_hash
+    user.password=pw_hash_decoded
+    db.session.commit()
 
-    return render_template("/")
+    return redirect("/")
 
 
 @app.route("/genre")
