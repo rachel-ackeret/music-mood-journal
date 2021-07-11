@@ -9,7 +9,7 @@ from flask_login import LoginManager, login_user, login_required, current_user, 
 from sqlalchemy import desc
 from model import connect_to_db, User, Entry, db, WeatherDetails, SongDetails
 import crud
-from flask_bcrypt import Bcrypt
+from flask.ext.bcrypt import Bcrypt
 
 # Weather API
 WEATHER_KEY = os.environ['WEATHER_API_KEY']
