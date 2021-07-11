@@ -9,6 +9,7 @@ from flask_login import LoginManager, login_user, login_required, current_user, 
 from sqlalchemy import desc
 from model import connect_to_db, User, Entry, db, WeatherDetails, SongDetails
 import crud
+from flask.ext.bcrypt import Bcrypt
 
 # Weather API
 WEATHER_KEY = os.environ['WEATHER_API_KEY']
@@ -16,6 +17,7 @@ WEATHER_KEY = os.environ['WEATHER_API_KEY']
 # Flask setup
 app = Flask(__name__)
 app.secret_key = "SECRETSECRETSECRET"
+bcrypt = Bcrypt(app)
 
 # Flask login setup
 login_manager = LoginManager()
@@ -67,12 +69,10 @@ def login():
     username = request.form.get("username")
     password = request.form.get("password")
     
-    # For debugging
-    print(username)
-    print(password)
+    pw_hash = bcrypt.generate_password_hash(password).decode(‘utf-8’)
 
     user = User.query.filter_by(username=username).first()
-    if user and user.password == password:
+    if bcrypt.check_password_hash(pw_hash, username):
         # Call flask_login.login_user to login a user
         login_user(user)
 
@@ -80,6 +80,10 @@ def login():
             return redirect("/genre")
 
         return redirect("/journal")
+    
+    #If password is empty or reset for security purposes -
+    if user.password == '_':
+        return redirect("/password-reset")
 
     print("sorry try again")
     flash("Sorry try again.")
@@ -93,10 +97,12 @@ def register():
     fname = request.form.get("fname")
     zipcode = request.form.get("zipcode")
 
+    pw_hash = bcrypt.generate_password_hash(password).decode(‘utf-8’)
+
     if not User.query.filter_by(username=username).first():
         user = User(
             username=username,
-            password=password,
+            password=pw_hash,
             fname = fname,
             zipcode = zipcode,
         )
@@ -110,7 +116,27 @@ def register():
 
     return redirect("/")
 
-#redirect them to the login for users not logged in
+
+@app.route("/password-reset-page")
+def resetpw():
+    return render_template("password-reset.html")
+
+
+@app.route("/password-reset-save", methods=["POST"])
+def resetpw():
+
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    pw_hash = bcrypt.generate_password_hash(password).decode(‘utf-8’)
+    
+    user = User.query.filter_by(username=username).first()
+
+    if user.password == '_':
+        user.password=pw_hash
+
+    return render_template("/")
+
 
 @app.route("/genre")
 @login_required
