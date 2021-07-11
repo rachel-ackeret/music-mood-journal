@@ -69,7 +69,7 @@ def login():
     username = request.form.get("username")
     password = request.form.get("password")
     
-    pw_hash = bcrypt.generate_password_hash(password).decode(‘utf-8’)
+    pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
     user = User.query.filter_by(username=username).first()
     if bcrypt.check_password_hash(pw_hash, username):
@@ -97,7 +97,7 @@ def register():
     fname = request.form.get("fname")
     zipcode = request.form.get("zipcode")
 
-    pw_hash = bcrypt.generate_password_hash(password).decode(‘utf-8’)
+    pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
     if not User.query.filter_by(username=username).first():
         user = User(
