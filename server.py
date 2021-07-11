@@ -128,7 +128,7 @@ def resetpw():
     username = request.form.get("username")
     password = request.form.get("password")
 
-    pw_hash = bcrypt.generate_password_hash(password).decode(‘utf-8’)
+    pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
     
     user = User.query.filter_by(username=username).first()
 
