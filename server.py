@@ -1,15 +1,20 @@
-from flask import Flask, render_template, request, flash, redirect, session, jsonify
-from pprint import pformat
 import os
-import requests
-import spotipy
+import html
 from random import choice
-from spotipy.oauth2 import SpotifyClientCredentials
+from pprint import pformat
+
+from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from sqlalchemy import desc
+
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+
+import requests
+import bcrypt
+
 from model import connect_to_db, User, Entry, db, WeatherDetails, SongDetails
 import crud
-import bcrypt
 
 # Weather API
 WEATHER_KEY = os.environ['WEATHER_API_KEY']
@@ -115,26 +120,26 @@ def register():
     return redirect("/")
 
 
-@app.route("/password-reset-page")
-def resetpw():
-    return render_template("password-reset.html")
+# @app.route("/password-reset-page")
+# def resetpw():
+#     return render_template("password-reset.html")
 
 
-@app.route("/password-reset-save", methods=["POST"])
-def savepw():
+# @app.route("/password-reset-save", methods=["POST"])
+# def savepw():
 
-    username = request.form.get("username")
-    password = request.form.get("password").encode("utf-8")
+#     username = request.form.get("username")
+#     password = request.form.get("password").encode("utf-8")
 
-    pw_hash = bcrypt.hashpw(password, bcrypt.gensalt())
-    pw_hash_decoded = pw_hash.decode('utf-8')
+#     pw_hash = bcrypt.hashpw(password, bcrypt.gensalt())
+#     pw_hash_decoded = pw_hash.decode('utf-8')
 
-    user = User.query.filter_by(username=username).first()
+#     user = User.query.filter_by(username=username).first()
 
-    user.password=pw_hash_decoded
-    db.session.commit()
+#     user.password=pw_hash_decoded
+#     db.session.commit()
 
-    return redirect("/")
+#     return redirect("/")
 
 
 @app.route("/genre")
@@ -175,7 +180,7 @@ def create_journal_entry():
 @login_required
 def save_journal():
     #get data from journal form
-    body = request.form.get("journal_entry")
+    body = html.escape(request.form.get("journal_entry"))
     energy_ranking = int(request.form.get("energy"))
     mood_ranking = int(request.form.get("happiness"))
     zipcode = current_user.zipcode
@@ -235,6 +240,7 @@ def dashboard():
 
 
 @app.route("/api/entry-edit/<entry_id>", methods=["POST"])
+@login_required
 def edit_entry(entry_id):
     """Edit journal entry.
     
@@ -259,7 +265,7 @@ def edit_entry(entry_id):
     energy_ranking_updated = ''
 
     if body:
-        journal_entry.body = body
+        journal_entry.body = html.escape(body)
 
     if energy_ranking:
         journal_entry.energy_ranking = int(energy_ranking)
