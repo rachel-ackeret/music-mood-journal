@@ -389,7 +389,11 @@ def get_last_entry():
     return jsonify(entry_json)
 
 
-#TEST DATA 
+@app.route("/demo/")
+def displaydemo():
+    
+    return render_template("demo.html")
+
 
 
 if __name__ == "__main__":
